@@ -1,0 +1,10 @@
+title: Workspace
+description:
+  The workspace is a folder in the Sketch file archive that can contain
+  arbitrary JSON files, allowing Sketch and 3rd party products and tools to
+  store settings that should travel with the Sketch document. To avoid clashes
+  or settings being overridden, select a unique name for your workspace file.
+type: object
+additionalProperties:
+  type: object
+  additionalProperties: true

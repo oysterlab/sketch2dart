@@ -1,0 +1,13 @@
+title: Sketch Variant
+description: Enumeration of the Sketch variants
+type: string
+enum:
+  - NONAPPSTORE
+  - APPSTORE
+  - BETA
+  - PRIVATE
+  - FEATURE_PREVIEW
+  - INTERNAL
+  - EXPERIMENTAL
+  - TESTING
+  - UNITTEST
