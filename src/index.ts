@@ -1,180 +1,66 @@
+
 import YAML from 'yaml'
 import fs from 'fs'
 import path from 'path'
 
-function getRootPath(filename: string): string {
-	let rootPath = path.resolve(filename)
-	rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"))		
-	return rootPath
-}
 
-const getTypeMap = function(filename: string): Map<string, any> {
-	let rootPath = getRootPath(filename)
-	let typeMap:Map<string, any> = new Map<string, string>()
-	filename = filename.split('/')[filename.split('/').length - 1]
-
-	const _getObjectItem = function(filepath: string, data: any) {
-
-		Object.keys(data).forEach(function(key) {
-			const isObject = (typeof data[key] == 'object')
-			if (isObject) {
-				_getObjectItem(filepath, data[key])
-			}
-
-			if (key == 'type' 
-						&& !typeMap.has(data[key])) {
-				const skTypeName = data[key]
-				let dartTypeName = ''
-
-				switch(skTypeName) {
-					case 'string':
-						dartTypeName = 'String'
-					break
-					case 'array':
-						dartTypeName = 'List'
-					break
-					case 'number':
-						dartTypeName = 'double'
-					break
-					case 'integer':
-						dartTypeName = 'int'
-					break
-					case 'boolean':
-						dartTypeName = 'bool'						
-					break
-					case 'object':
-						dartTypeName = "Map<String, dynamic>"
-					break															
-				}
-				
-				if (dartTypeName.length > 0) {
-					typeMap.set(skTypeName, {
-						data: null,						
-						typeName: dartTypeName,
-						isDone: false
-					})
-				}
-			}
-
-			if (key == '$ref') {
-				console.log
-				let refPath:string = data[key]
-				
-				const pathToken = refPath.split('/')
-				const fileName = pathToken[pathToken.length - 1]
-				const dirName = pathToken[pathToken.length - 2]
-				switch(dirName) {
-					case 'enums':
-					case 'layers':
-					case 'objects':						
-					case 'utils':
-						refPath = path.resolve(rootPath, dirName, fileName)
-					break
-
-					default:
-						refPath = path.resolve(filepath + '/../', refPath)
-					break
-				}
-
-				const relativePath = refPath.replace(rootPath, '')
-				if(!typeMap.has(relativePath)) {
-					let className = fileName
-							.replace('.schema.yaml', '')
-							.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
-						className = className.charAt(0).toUpperCase() + className.slice(1)
-
-					typeMap.set(relativePath, {
-						schema: YAML.parse(fs.readFileSync(refPath, 'utf8')),
-						typeName: className,
-						isDone: false,
-					})
-					_getTypeMap(refPath)
-				}
-			}
-		})		
-	}
-
-	const _getTypeMap = function(filepath: string) {
-		const file = fs.readFileSync(filepath, 'utf8')
-		const result = YAML.parse(file)	
-		const data = result
-		_getObjectItem(filepath, data)
-	}
-
-	const filePath = path.resolve(rootPath, filename);
-	_getTypeMap(filePath)
-
-	return typeMap
-}
-
-const ROOT_FILEPATH = 'schema/file-format.schema.yaml'
-
-const typeMap = getTypeMap(ROOT_FILEPATH)
-
-typeMap.forEach((typeData) => {
-	const schema = typeData['schema']
-	if (!schema) return
-
-	const type = schema['type']
+/*
+ * parsing yaml to json, add className and classPath from $ref prop.
+ */
+function getSchema(filePath:string) {
+	const dirPath = path.dirname(filePath)
+	const schema = YAML.parse(fs.readFileSync(filePath, 'utf-8'))
 	
-	switch(type) {
-		case 'object':
-			if (schema['properties']) {
-				const classStr = getClass(typeData, typeMap)
-				console.log(classStr)
-			} else if (schema['allOf']) {
-
-			} else if (schema['additionalProperties']) {
-
+	const refToAbs = (obj:any) => {
+		Object.keys(obj).forEach((propName:string) => {
+			if (typeof obj[propName] == 'object') {
+				refToAbs(obj[propName])
 			}
-		break
 
-		case 'integer':
-		case 'string':
-			if (schema['enum']) {
-			} else if(schema['pattern']) {
-
-			} else {
-
-			}
-		break
-
-		default:
-			if (schema['properties']) {
+			if (propName == '$ref') {
+				const absPath = path.join(dirPath, obj[propName])
 				
-			} else if (schema['allOf']) {
-
-			} else if (schema['additionalProperties']) {
-
-			} else {
-				console.log(schema) 
-			}			
-			break
+				let className = absPath.split('/')[absPath.split('/').length - 1]
+														.replace('.schema.yaml', '')
+														.split('-')
+														.reduce((className:string, word:string) => {
+															className += word[0].toUpperCase() + word.substr(1)
+															return className
+														}, '')
+														
+				obj['className'] = className
+				obj['classPath'] = dirPath
+			}
+		})
 	}
-}) 
 
-function getClass(typeData: any, typeMap:Map<string, any>) {
-	const className = typeData['typeName']
-	const properties =  typeData['schema']['properties']
+	refToAbs(schema)
 
-	let classStr = Object.keys(properties).reduce((str:string, propName:string) => {
-		const propValue = properties[propName]
-
-		if (propValue['const']) {
-			str += `  final String ${propName} = '${propValue['const']}';\n`
-		} else if (propValue['$ref']) {
-			console.log(propValue['$ref'])
-			str += `  $ref ${propName};\n`
-		} else if (propValue['type']) {
-			str += `  type ${propName};\n`
-		}
-		return str
-	}, '')
-
-	classStr = `class ${className} {\n${classStr}}`
-
-	console.log("\n\n\n\n\n")
-	console.log(classStr)
-
-	return ''
+	return schema
 }
+
+/*
+ * get redefined schemas from dir path.
+ */
+function getSchemas(schemaPath:string) {
+	const schemas:any = []
+
+	const getSchemas_ = (schemaPath:string) => {
+		if (fs.lstatSync(schemaPath).isDirectory()) {
+			fs.readdirSync(schemaPath).forEach((subPath: string) => {
+				subPath = path.join(schemaPath, subPath)
+				getSchemas_(subPath)
+			})
+		} else if (schemaPath.endsWith('.yaml')){
+			schemas.push(getSchema(schemaPath))
+		}
+	}
+
+	getSchemas_(schemaPath)
+
+	return schemas
+}
+
+const SCHEMA_PATH = 'schema'
+const schemas = getSchemas(SCHEMA_PATH)
+
