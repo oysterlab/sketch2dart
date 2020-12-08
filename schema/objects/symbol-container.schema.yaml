@@ -5,6 +5,6 @@ type: object
 optional:
   - do_objectID
 properties:
-  do_objectID: { $ref: ./utils/uuid.schema.yaml }
+  do_objectID: { $ref: ../utils/uuid.schema.yaml }
   _class: { const: symbolContainer }
   objects: { type: array }

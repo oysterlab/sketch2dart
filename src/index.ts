@@ -27,14 +27,34 @@ function getSchema(filePath:string) {
 	const refToAbs = (obj:any) => {
 		Object.keys(obj).forEach((propName:string) => {
 			if (typeof obj[propName] == 'object') {
-				refToAbs(obj[propName])
+				refToAbs(obj[propName]) 
 			}
 
 			if (propName == '$ref') {
 				const absPath = path.join(schemaDirPath, obj[propName])
 				const dirPath = path.dirname(absPath)
 				let className = getClassName(absPath)
-														
+				let classType = YAML.parse(fs.readFileSync('./'+absPath, 'utf-8')).type
+
+				switch (classType) {
+					case 'integer':
+						classType = 'int'
+						break
+					case 'number':
+						classType = 'double'
+						break						
+					case 'boolean':
+						classType = 'bool'
+						break													
+					case 'string':
+						classType = 'String'
+						break
+					default:
+						classType = 'String'
+						break
+				}
+
+				obj['classType'] = classType
 				obj['className'] = className
 				obj['classPath'] = dirPath
 			}
@@ -71,11 +91,21 @@ function getSchemas(schemaPath:string) {
 
 function _generateClassCode(schema: any) {
 	const className = schema['className']
-	const schemaDirPath = schema['classPath']
-	const properties = schema['properties']
+	const allOf = schema['allOf']
+	let properties = schema['properties']
 	let importCodes = ''
 	let definePropsCodes = ''
 	let extendsCode = ''
+	let subClassCode = ''
+
+	if (allOf) {
+		const importCode = "import '"+path.dirname(allOf[0]['$ref']) + '/' + allOf[0]['className'] + ".dart';\n"
+		importCodes += importCode
+		properties = allOf[1]['properties']
+		extendsCode = ' extends ' + allOf[0]['className']
+	}	
+
+	if (!properties) properties = {}
 
 	definePropsCodes = Object.keys(properties).reduce((dartCode: string, propName: string) => {
 		const prop = properties[propName]
@@ -83,7 +113,7 @@ function _generateClassCode(schema: any) {
 		let propValue = ''
 
 		if (prop.hasOwnProperty('const')) {
-			type = 'String'
+			type = 'final String'
 			propValue = ' = "' + prop['const'] + '"'
 		} else if (prop.hasOwnProperty('type')) {
 			switch (prop['type']) {
@@ -101,17 +131,43 @@ function _generateClassCode(schema: any) {
 				break
 				case 'array':
 					type = 'List'
-				break										
+				break
+				case 'object':
+					prop['className'] = className + '_' + (propName[0].toUpperCase() + propName.substr(1))
+					
+					if (prop.hasOwnProperty('properties')) {
+						type = prop['className']
+					} else {
+						type = 'dynamic'
+					}
+
+					subClassCode = _generateClassCode(prop)
+				break
 			}
 		} else if (prop.hasOwnProperty('$ref')) {
+			const classType = prop['classType']
+			if (classType == 'object') {
+				type = prop['className']
+				const importCode = "import '"+path.dirname(prop['$ref']) + '/' + type + ".dart';\n"
+				importCodes += importCode
+			} else {
+				type = classType
+				if (type == undefined) {
+					console.log(prop)
+				}
+			}
+
+		} else if (prop.hasOwnProperty('allOf')) {
+			prop['className'] = className + '_' + prop['allOf'][0]['className']
 			type = prop['className']
-			const classPath = prop['classPath']
-			console.log(schema)
-		} else {
-			console.log(chalk.red('----------- unknown property type \n' + JSON.stringify(prop, null, 2))+'\n\n')
+			subClassCode = _generateClassCode(prop)				
+		} else if (prop.hasOwnProperty('oneOf')) {
+			type = 'dynamic'
+		} 
+		else {
+			console.log(chalk.red('----------- unknown property "'+ propName + '" in ' + className + '\n' + JSON.stringify(prop, null, 2))+'\n\n')
 		}
-
-
+  
 		dartCode += '  ' + type + ' ' + propName + propValue + ';\n'
 		return dartCode
 	}, '')
@@ -119,13 +175,16 @@ function _generateClassCode(schema: any) {
 	return importCodes + '\n'
 				+ 'class ' + className + extendsCode + ' {\n'
 			 + definePropsCodes + '\n'
-			 + '}'
+			 + '} \n ' + subClassCode
 }
 
 function _generateEnumCode(schema: any) {
 	const className = schema['className']
-	
-	const definePropsCodes = schema['enumDescriptions'].map((enumName:string) => {
+	let definePropsCodes = ''
+
+	const enums = schema.hasOwnProperty('enumDescriptions') ? schema['enumDescriptions'] : schema['enum']
+
+	definePropsCodes = enums.map((enumName:string) => {
 		return enumName.split(' ').reduce((en:string, word:string) => {
 			en += word[0].toUpperCase() + word.substr(1)		
 			return en
@@ -138,23 +197,53 @@ function _generateEnumCode(schema: any) {
 }
 
 function generateDartCode(schema: any) {
-	if (schema.hasOwnProperty('properties')) {
-		return _generateClassCode(schema)
-	} else if (schema.hasOwnProperty('enum')) {
-		return _generateEnumCode(schema)
-	} else {
-		console.log(schema)
+	const type = schema['type']
+	const className = schema['className']
+
+	switch (type) {
+		case 'string':
+		case 'number':
+		case 'integer':
+			if (schema.hasOwnProperty('enum')) {
+				return _generateEnumCode(schema)
+			} else {
+				// console.log(chalk.red('----------- unknown integer or string type "'+ className + '"\n' + JSON.stringify(schema, null, 2))+'\n\n')
+			}
+			break
+		case 'object':
+			return _generateClassCode(schema)
+		default:
+			if (schema['allOf']) {
+				return _generateClassCode(schema)
+			} else if (schema['oneOf']){
+
+			} else {
+				console.log(chalk.red('----------- unknown type "'+ className + '"\n' + JSON.stringify(schema, null, 2))+'\n\n')		
+
+			}
 	}
+
+	return 'class Empty { }'
 }
 
 
 const SCHEMA_PATH = 'schema'
+const DIST_PATH = 'dist'
 const schemas = getSchemas(SCHEMA_PATH)
-const schema = schemas[50]
+const schema = schemas[0]
 
-const dartCode = generateDartCode(schema)
-console.log(dartCode)
+schemas.forEach((schema:any) => {
+	const className = schema['className']
+	const classPath = path.join(DIST_PATH, schema['classPath'])
 
+	if (!fs.existsSync(classPath)) {
+		fs.mkdirSync(classPath)
+	}
+
+	const dartPath = path.join(classPath, className + '.dart')
+	const dartCode = generateDartCode(schema)
+	fs.writeFileSync(dartPath, dartCode)	
+})
 
 
 /*
