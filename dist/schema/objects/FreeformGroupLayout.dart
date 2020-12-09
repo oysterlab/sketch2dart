@@ -1,0 +1,28 @@
+
+class FreeformGroupLayout {
+  final String _class = "MSImmutableFreeformGroupLayout";
+
+  FreeformGroupLayout();
+
+  static setModelWithMap(Map<String, dynamic> map, FreeformGroupLayout model) {
+	}
+
+  factory FreeformGroupLayout.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+    FreeformGroupLayout model = FreeformGroupLayout();
+	  FreeformGroupLayout.setModelWithMap(map, model);
+    return model;
+  }
+
+  Map<String, dynamic> toMap() {
+	  return {
+    };
+  }
+
+  @override
+  String toString() {
+    return 'FreeformGroupLayout()';
+  }
+
+} 
+ 
