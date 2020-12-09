@@ -4,6 +4,104 @@ import fs from 'fs'
 import path from 'path'
 const chalk = require('chalk')
 
+function getClassAliasName(schema: any) {
+    let alias = null
+    const _getClassAliasName = (property:any) => {
+        Object.keys(property).forEach((propName:string) => {
+            const prop = property[propName]
+            if (propName == '_class') {
+                alias = prop['const']
+            } else if (typeof prop == 'object') {
+                _getClassAliasName(prop)
+            } 
+        })
+    }
+    _getClassAliasName(schema)
+    return alias
+}
+
+function _generateOneOfSwitchCode(oneOfs:any, propName: string) {
+	const varName = propName + "_t"
+	let importCode = ''
+	let switchCode = "    dynamic " + varName + " = map['" + propName + "'];\n" +
+					 "    if (" + varName+ ") {\n"
+	switchCode += "      switch(" + varName + "['_class']) {\n" 
+	switchCode += oneOfs.reduce((switchCodeSnippet:string, oneOf:any) => {
+		if (oneOf['$ref']) {
+			importCode += "import '" + path.dirname(oneOf['$ref']) + '/' + oneOf['className'] + ".dart';\n"
+		}
+
+		const _class = oneOf['_class']
+		const classType = oneOf['classType']
+		const className = oneOf['className']	
+		
+		if (_class) {
+			switchCodeSnippet += "        case '" + _class + "':\n"
+			if (classType == 'Object') {
+				switchCodeSnippet += "          model." + propName + " = map['"+propName+"'] != null ? new " + className + ".fromMap(map['"+propName+"']) : null;\n"
+			}
+			switchCodeSnippet += "          break;\n\n"
+		}
+		return switchCodeSnippet
+	}, '')
+	switchCode += "        default:\n"
+	switchCode += "          break;\n"			
+	switchCode += "      }\n" 
+	switchCode += "    }\n" 	
+
+	return {
+		switchCode, importCode
+	}
+}
+
+function _generateOneOfSwitchCodeArray(oneOfs:any, propName: string) {
+	
+	let importCode = ''
+
+	let code = ''
+	code += "    if (map['" + propName + "']) {\n"
+	code += "      model."+propName+" = map['" + propName + "'].map((d) {\n"
+	code += "        dynamic model = null;\n"
+
+
+	let switchCode = "        switch(d['_class']) {\n" 
+	switchCode += oneOfs.reduce((switchCodeSnippet:string, oneOf:any) => {
+		if (oneOf['$ref']) {
+			importCode += "import '" + path.dirname(oneOf['$ref']) + '/' + oneOf['className'] + ".dart';\n"
+		}
+
+		const _class = oneOf['_class']
+		const classType = oneOf['classType']
+		const className = oneOf['className']	
+		
+		if (_class) {
+			switchCodeSnippet += "          case '" + _class + "':\n"
+			
+			if (classType == 'Object') {
+				switchCodeSnippet += "            model = new " + className + ".fromMap(d);\n"
+			}
+			switchCodeSnippet += "            break;\n\n"
+		}
+		return switchCodeSnippet
+	}, '')
+	switchCode += "          default:\n"
+	switchCode += "            break;\n"			
+	switchCode += "        }\n" 
+
+	code += switchCode +"\n"
+
+
+
+	code += "        return model;\n"
+	code += "      });\n"	
+	code += "    }\n"	
+
+
+	return {
+		switchCode: code, importCode
+	}
+}
+
 /*
  * parsing yaml to json, add className and classPath from $ref prop.
  */
@@ -34,7 +132,8 @@ function getSchema(filePath:string) {
 				const absPath = path.join(schemaDirPath, obj[propName])
 				const dirPath = path.dirname(absPath)
 				let className = getClassName(absPath)
-				let classType = YAML.parse(fs.readFileSync('./'+absPath, 'utf-8')).type
+				const refSchema = YAML.parse(fs.readFileSync('./' + absPath, 'utf-8'))
+				let classType = refSchema.type
 
 				switch (classType) {
 					case 'integer':
@@ -49,11 +148,17 @@ function getSchema(filePath:string) {
 					case 'string':
 						classType = 'String'
 						break
+
+					case 'object':
+						classType = 'Object'
+						break
+
 					default:
-						classType = 'String'
+						classType = 'Object'
 						break
 				}
-
+				
+				obj['_class'] = getClassAliasName(refSchema)
 				obj['classType'] = classType
 				obj['className'] = className
 				obj['classPath'] = dirPath
@@ -88,6 +193,158 @@ function getSchemas(schemaPath:string) {
 	return schemas
 }
 
+function _generateDataClassFunctionCode(schema: any) {
+	const className = schema['className']
+	const allOf = schema['allOf']
+	let properties = schema['properties']
+	let constructorCode = ''
+	let fromMapCode = ''
+	let toMapCode = ''
+	let toStringCode = ''
+	let setModelWithMapCode = ''
+	let parentClass = null
+	let importCode = ''
+
+	if (allOf) {
+		properties = allOf[1]['properties']
+		parentClass = allOf[0]['className']
+		setModelWithMapCode = '\n    ' + parentClass+ '.setModelWithMap(map, model);\n'
+	}
+
+	if (!properties) properties = {}
+
+
+	Object.keys(properties).forEach((propName: string) => {
+		const prop = properties[propName]
+
+		if (prop.hasOwnProperty('type')) {
+			switch (prop['type']) {
+				case 'integer':
+				case 'boolean':
+				case 'string':
+				case 'object': //dynamic
+					setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'];\n"
+				break
+
+				case 'number':
+					setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'] != null ? map['"+propName+"'].toDouble() : 0.0;\n"
+				break
+
+				case 'array':
+					if (prop.hasOwnProperty('items')) {	//has a type
+						const items = prop['items']
+						if (items.hasOwnProperty('$ref')) {
+							const ref = items['$ref']
+							const className = items['className']
+
+							importCode += "import '" + path.dirname(ref) + '/' + className + ".dart';\n"
+							
+							setModelWithMapCode += '\n'
+							setModelWithMapCode += "    if (map['" + propName + "']) {\n"
+							setModelWithMapCode += "       model." + propName + " = map['"+propName+"'].map((d) => new " + className + '.fromMap(d));\n'		
+							setModelWithMapCode += "    }\n"					
+ 
+						} else if (items.hasOwnProperty('oneOf')) {
+							const oneOfs = items['oneOf']
+							const switchCodeResult = _generateOneOfSwitchCodeArray(oneOfs, propName)
+							
+							importCode += switchCodeResult.importCode
+							setModelWithMapCode += switchCodeResult.switchCode
+
+						} else if (items.hasOwnProperty('type')) {
+							const itemType = (items['type'])
+							switch(itemType) {
+								case 'integer':
+									setModelWithMapCode += '\n    model.' + propName + " = List<int>.from(map['"+propName+"']);\n"
+									break
+								case 'number':
+									setModelWithMapCode += '\n    model.' + propName + " = List<double>.from(map['"+propName+"']);\n"
+									break
+								case 'string':
+									setModelWithMapCode += '\n    model.' + propName + " = List<String>.from(map['"+propName+"']);\n"
+									break		
+								
+								default:
+									console.log('------------ unkwoun item type in')
+									console.log(className)
+									console.log(items)
+									console.log('\n\n')		
+									break
+							}
+						}
+					} else {	//dynamic
+						setModelWithMapCode += '\n    model.' + propName + " = List.from(map['"+propName+"']);\n"
+					}
+				break
+			}
+		} else if (prop.hasOwnProperty('$ref')) {
+			const classType = prop['classType']
+			if (classType == 'object') {
+				const propClassName = propName[0].toUpperCase() + propName.substr(1)
+				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'] != null ? new " + propClassName + ".fromMap(map['"+propName+"']) : null;\n"
+
+			} else {
+				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'];\n"
+			}
+
+		} else if (prop.hasOwnProperty('allOf')) {
+			// ???	
+		} else if (prop.hasOwnProperty('oneOf')) {
+			const oneOfs = prop['oneOf']
+			
+			const switchCodeResult = _generateOneOfSwitchCode(oneOfs, propName)
+
+			importCode += switchCodeResult.importCode
+			setModelWithMapCode += '\n' + switchCodeResult.switchCode
+
+		}
+	  })
+	
+	let constructorFunctionCode = 
+	'  ' + className + '('
+
+    if (constructorCode.length > 0) {
+		constructorFunctionCode += ('{' + constructorCode + '}\n  ')
+	}
+	constructorFunctionCode +=
+	');\n'
+
+	const setModelWithMapFunctionCode = 
+	 '  static setModelWithMap(Map<String, dynamic> map, ' + className + ' model) {' + 
+	 ""	+ setModelWithMapCode + '\n' + 
+	 '	}\n'
+
+	const fromMapFunctionCode =
+	 '  factory ' + className + '.fromMap(Map<String, dynamic> map) {\n' +
+	 '    if (map == null) return null;\n' +
+	 "    " + className + " model = " + className + "();\n" +
+	 "	  " + className + ".setModelWithMap(map, model);\n" + 	
+	 '    return model;\n' +
+	 '  }\n'
+
+	 const toMapFunctionCode = 
+	 '  Map<String, dynamic> toMap() {\n' +
+	 '	  return {\n' +
+	  	toMapCode +
+	 '    };\n' +
+	 '  }\n'
+
+	 const toStringFunctionCode = 
+	 '  @override\n' +
+	 '  String toString() {\n' + 
+	 '    return \'' + className + '(' + toStringCode + ')\';\n' +
+	 '  }\n'
+
+
+	return {
+		importCode: importCode,
+		dataClassCode: constructorFunctionCode + '\n' + 
+						setModelWithMapFunctionCode + '\n' +
+						fromMapFunctionCode + '\n' + 
+						toMapFunctionCode + '\n' +
+						toStringFunctionCode
+	}
+}
 
 function _generateClassCode(schema: any) {
 	const className = schema['className']
@@ -97,13 +354,14 @@ function _generateClassCode(schema: any) {
 	let definePropsCodes = ''
 	let extendsCode = ''
 	let subClassCode = ''
+	let dataClassCode = ''
 
 	if (allOf) {
 		const importCode = "import '"+path.dirname(allOf[0]['$ref']) + '/' + allOf[0]['className'] + ".dart';\n"
 		importCodes += importCode
 		properties = allOf[1]['properties']
 		extendsCode = ' extends ' + allOf[0]['className']
-	}	
+	}
 
 	if (!properties) properties = {}
 
@@ -152,9 +410,6 @@ function _generateClassCode(schema: any) {
 				importCodes += importCode
 			} else {
 				type = classType
-				if (type == undefined) {
-					console.log(prop)
-				}
 			}
 
 		} else if (prop.hasOwnProperty('allOf')) {
@@ -172,9 +427,15 @@ function _generateClassCode(schema: any) {
 		return dartCode
 	}, '')
 
+	const dataClassResult = _generateDataClassFunctionCode(schema)
+
+	importCodes += dataClassResult['importCode']
+	dataClassCode += dataClassResult['dataClassCode']
+
 	return importCodes + '\n'
 				+ 'class ' + className + extendsCode + ' {\n'
 			 + definePropsCodes + '\n'
+			 + dataClassCode + '\n'
 			 + '} \n ' + subClassCode
 }
 

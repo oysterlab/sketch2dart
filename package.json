@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test-start": "npm run test-build:live",
+    "test-build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/test.ts",
     "start": "npm run build:live",
     "build": "tsc -p .",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts"
