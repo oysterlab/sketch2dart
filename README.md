@@ -1,4 +1,4 @@
-# sketch2dart model
+# sketch2dart
 > Dart model types for the Sketch File Format
 
 ## Overview
