@@ -9,8 +9,8 @@ class Document extends AbstractDocument {
   static setModelWithMap(Map<String, dynamic> map, Document model) {
     AbstractDocument.setModelWithMap(map, model);
 
-    if (map['pages']) {
-       model.pages = map['pages'].map((d) => new FileRef.fromMap(d));
+    if (map['pages'] != null) {
+       model.pages = map['pages'].map((d) => new FileRef.fromMap(d)).toList();
     }
 
 	}
@@ -33,4 +33,3 @@ class Document extends AbstractDocument {
   }
 
 } 
- 

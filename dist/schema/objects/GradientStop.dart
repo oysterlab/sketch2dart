@@ -1,15 +1,16 @@
+import './Color.dart';
 
 class GradientStop {
   final String _class = "gradientStop";
-  Object color;
+  Color color;
   double position;
 
   GradientStop();
 
   static setModelWithMap(Map<String, dynamic> map, GradientStop model) {
-    model.color = map['color'];
+    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
 
-    model.position = map['position'];
+    model.position = map['position'].toDouble();
 
 	}
 
@@ -31,4 +32,3 @@ class GradientStop {
   }
 
 } 
- 

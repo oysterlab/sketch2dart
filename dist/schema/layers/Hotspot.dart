@@ -28,4 +28,3 @@ class Hotspot extends AbstractLayer {
   }
 
 } 
- 

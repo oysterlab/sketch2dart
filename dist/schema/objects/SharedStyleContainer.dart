@@ -10,8 +10,8 @@ class SharedStyleContainer {
   static setModelWithMap(Map<String, dynamic> map, SharedStyleContainer model) {
     model.do_objectID = map['do_objectID'];
 
-    if (map['objects']) {
-       model.objects = map['objects'].map((d) => new SharedStyle.fromMap(d));
+    if (map['objects'] != null) {
+       model.objects = map['objects'].map((d) => new SharedStyle.fromMap(d)).toList();
     }
 
 	}
@@ -34,4 +34,3 @@ class SharedStyleContainer {
   }
 
 } 
- 

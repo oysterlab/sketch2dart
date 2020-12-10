@@ -10,7 +10,7 @@ class FlowConnection {
 
   static setModelWithMap(Map<String, dynamic> map, FlowConnection model) {
     dynamic destinationArtboardID_t = map['destinationArtboardID'];
-    if (destinationArtboardID_t) {
+    if (destinationArtboardID_t != null) {
       switch(destinationArtboardID_t['_class']) {
         default:
           break;
@@ -41,4 +41,3 @@ class FlowConnection {
   }
 
 } 
- 

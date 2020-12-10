@@ -1,3 +1,4 @@
+import './Swatch.dart';
 
 class ForeignSwatch {
   final String _class = "MSImmutableForeignSwatch";
@@ -6,7 +7,7 @@ class ForeignSwatch {
   String sourceLibraryName;
   bool symbolPrivate;
   String remoteSwatchID;
-  Object localSwatch;
+  Swatch localSwatch;
 
   ForeignSwatch();
 
@@ -21,7 +22,7 @@ class ForeignSwatch {
 
     model.remoteSwatchID = map['remoteSwatchID'];
 
-    model.localSwatch = map['localSwatch'];
+    model.localSwatch = map['localSwatch'] != null ? new Swatch.fromMap(map['localSwatch']) : null;
 
 	}
 
@@ -43,4 +44,3 @@ class ForeignSwatch {
   }
 
 } 
- 

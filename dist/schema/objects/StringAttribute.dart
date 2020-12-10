@@ -1,3 +1,6 @@
+import '../objects/FontDescriptor.dart';
+import '../objects/Color.dart';
+import './ParagraphStyle.dart';
 
 class StringAttribute {
   final String _class = "stringAttribute";
@@ -34,13 +37,12 @@ class StringAttribute {
   }
 
 } 
- 
 class StringAttribute_Attributes {
   double kerning;
   int textStyleVerticalAlignmentKey;
-  Object MSAttributedStringFontAttribute;
-  Object MSAttributedStringColorAttribute;
-  Object paragraphStyle;
+  FontDescriptor MSAttributedStringFontAttribute;
+  Color MSAttributedStringColorAttribute;
+  ParagraphStyle paragraphStyle;
 
   StringAttribute_Attributes();
 
@@ -49,11 +51,11 @@ class StringAttribute_Attributes {
 
     model.textStyleVerticalAlignmentKey = map['textStyleVerticalAlignmentKey'];
 
-    model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'];
+    model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'] != null ? new FontDescriptor.fromMap(map['MSAttributedStringFontAttribute']) : null;
 
-    model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'];
+    model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'] != null ? new Color.fromMap(map['MSAttributedStringColorAttribute']) : null;
 
-    model.paragraphStyle = map['paragraphStyle'];
+    model.paragraphStyle = map['paragraphStyle'] != null ? new ParagraphStyle.fromMap(map['paragraphStyle']) : null;
 
 	}
 
@@ -75,4 +77,3 @@ class StringAttribute_Attributes {
   }
 
 } 
- 

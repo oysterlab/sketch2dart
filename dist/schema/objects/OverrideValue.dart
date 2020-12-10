@@ -1,3 +1,4 @@
+import './OverrideName.dart';
 import '../utils/Uuid.dart';
 import './FileRef.dart';
 import './DataRef.dart';
@@ -5,7 +6,7 @@ import './DataRef.dart';
 class OverrideValue {
   final String _class = "overrideValue";
   String do_objectID;
-  Object overrideName;
+  OverrideName overrideName;
   dynamic value;
 
   OverrideValue();
@@ -13,10 +14,10 @@ class OverrideValue {
   static setModelWithMap(Map<String, dynamic> map, OverrideValue model) {
     model.do_objectID = map['do_objectID'];
 
-    model.overrideName = map['overrideName'];
+    model.overrideName = map['overrideName'] != null ? new OverrideName.fromMap(map['overrideName']) : null;
 
     dynamic value_t = map['value'];
-    if (value_t) {
+    if (value_t != null) {
       switch(value_t['_class']) {
         case 'MSJSONFileReference':
           model.value = map['value'] != null ? new FileRef.fromMap(map['value']) : null;
@@ -51,4 +52,3 @@ class OverrideValue {
   }
 
 } 
- 

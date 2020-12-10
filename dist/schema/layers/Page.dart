@@ -1,12 +1,16 @@
 import './AbstractGroup.dart';
+import '../objects/RulerData.dart';
+import '../objects/RulerData.dart';
+import '../objects/LayoutGrid.dart';
+import '../objects/SimpleGrid.dart';
 
 class Page extends AbstractGroup {
   final String _class = "page";
   bool includeInCloudUpload;
-  Object horizontalRulerData;
-  Object verticalRulerData;
-  Object layout;
-  Object grid;
+  RulerData horizontalRulerData;
+  RulerData verticalRulerData;
+  LayoutGrid layout;
+  SimpleGrid grid;
 
   Page();
 
@@ -15,13 +19,13 @@ class Page extends AbstractGroup {
 
     model.includeInCloudUpload = map['includeInCloudUpload'];
 
-    model.horizontalRulerData = map['horizontalRulerData'];
+    model.horizontalRulerData = map['horizontalRulerData'] != null ? new RulerData.fromMap(map['horizontalRulerData']) : null;
 
-    model.verticalRulerData = map['verticalRulerData'];
+    model.verticalRulerData = map['verticalRulerData'] != null ? new RulerData.fromMap(map['verticalRulerData']) : null;
 
-    model.layout = map['layout'];
+    model.layout = map['layout'] != null ? new LayoutGrid.fromMap(map['layout']) : null;
 
-    model.grid = map['grid'];
+    model.grid = map['grid'] != null ? new SimpleGrid.fromMap(map['grid']) : null;
 
 	}
 
@@ -43,4 +47,3 @@ class Page extends AbstractGroup {
   }
 
 } 
- 

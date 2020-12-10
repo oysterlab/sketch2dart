@@ -1,20 +1,23 @@
+import './Color.dart';
+import './GraphicsContextSettings.dart';
+import './Gradient.dart';
 
 class Border {
   final String _class = "border";
   bool isEnabled;
-  Object color;
+  Color color;
   int fillType;
   int position;
   double thickness;
-  Object contextSettings;
-  Object gradient;
+  GraphicsContextSettings contextSettings;
+  Gradient gradient;
 
   Border();
 
   static setModelWithMap(Map<String, dynamic> map, Border model) {
     model.isEnabled = map['isEnabled'];
 
-    model.color = map['color'];
+    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
 
     model.fillType = map['fillType'];
 
@@ -22,9 +25,9 @@ class Border {
 
     model.thickness = map['thickness'] != null ? map['thickness'].toDouble() : 0.0;
 
-    model.contextSettings = map['contextSettings'];
+    model.contextSettings = map['contextSettings'] != null ? new GraphicsContextSettings.fromMap(map['contextSettings']) : null;
 
-    model.gradient = map['gradient'];
+    model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
 
 	}
 
@@ -46,4 +49,3 @@ class Border {
   }
 
 } 
- 

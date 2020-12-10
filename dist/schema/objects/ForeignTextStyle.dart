@@ -1,3 +1,4 @@
+import './SharedStyle.dart';
 
 class ForeignTextStyle {
   final String _class = "MSImmutableForeignTextStyle";
@@ -5,7 +6,7 @@ class ForeignTextStyle {
   String sourceLibraryName;
   bool symbolPrivate;
   String remoteStyleID;
-  Object localSharedStyle;
+  SharedStyle localSharedStyle;
   bool missingLibraryFontAcknowledged;
 
   ForeignTextStyle();
@@ -19,7 +20,7 @@ class ForeignTextStyle {
 
     model.remoteStyleID = map['remoteStyleID'];
 
-    model.localSharedStyle = map['localSharedStyle'];
+    model.localSharedStyle = map['localSharedStyle'] != null ? new SharedStyle.fromMap(map['localSharedStyle']) : null;
 
     model.missingLibraryFontAcknowledged = map['missingLibraryFontAcknowledged'];
 
@@ -43,4 +44,3 @@ class ForeignTextStyle {
   }
 
 } 
- 

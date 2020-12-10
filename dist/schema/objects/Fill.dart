@@ -1,17 +1,20 @@
+import './Color.dart';
+import './GraphicsContextSettings.dart';
+import './Gradient.dart';
 import '../objects/FileRef.dart';
 import '../objects/DataRef.dart';
 
 class Fill {
   final String _class = "fill";
   bool isEnabled;
-  Object color;
+  Color color;
   int fillType;
   double noiseIndex;
   double noiseIntensity;
   int patternFillType;
   double patternTileScale;
-  Object contextSettings;
-  Object gradient;
+  GraphicsContextSettings contextSettings;
+  Gradient gradient;
   dynamic image;
 
   Fill();
@@ -19,7 +22,7 @@ class Fill {
   static setModelWithMap(Map<String, dynamic> map, Fill model) {
     model.isEnabled = map['isEnabled'];
 
-    model.color = map['color'];
+    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
 
     model.fillType = map['fillType'];
 
@@ -31,12 +34,12 @@ class Fill {
 
     model.patternTileScale = map['patternTileScale'] != null ? map['patternTileScale'].toDouble() : 0.0;
 
-    model.contextSettings = map['contextSettings'];
+    model.contextSettings = map['contextSettings'] != null ? new GraphicsContextSettings.fromMap(map['contextSettings']) : null;
 
-    model.gradient = map['gradient'];
+    model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
 
     dynamic image_t = map['image'];
-    if (image_t) {
+    if (image_t != null) {
       switch(image_t['_class']) {
         case 'MSJSONFileReference':
           model.image = map['image'] != null ? new FileRef.fromMap(map['image']) : null;
@@ -71,4 +74,3 @@ class Fill {
   }
 
 } 
- 

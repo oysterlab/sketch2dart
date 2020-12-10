@@ -28,4 +28,3 @@ class Group extends AbstractGroup {
   }
 
 } 
- 

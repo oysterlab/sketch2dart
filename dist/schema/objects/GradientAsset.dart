@@ -1,9 +1,10 @@
+import './Gradient.dart';
 
 class GradientAsset {
   final String _class = "MSImmutableGradientAsset";
   String do_objectID;
   String name;
-  Object gradient;
+  Gradient gradient;
 
   GradientAsset();
 
@@ -12,7 +13,7 @@ class GradientAsset {
 
     model.name = map['name'];
 
-    model.gradient = map['gradient'];
+    model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
 
 	}
 
@@ -34,4 +35,3 @@ class GradientAsset {
   }
 
 } 
- 

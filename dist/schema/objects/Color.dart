@@ -10,13 +10,13 @@ class Color {
   Color();
 
   static setModelWithMap(Map<String, dynamic> map, Color model) {
-    model.alpha = map['alpha'];
+    model.alpha = map['alpha'].toDouble();
 
-    model.red = map['red'];
+    model.red = map['red'].toDouble();
 
-    model.green = map['green'];
+    model.green = map['green'].toDouble();
 
-    model.blue = map['blue'];
+    model.blue = map['blue'].toDouble();
 
     model.swatchID = map['swatchID'];
 
@@ -40,4 +40,3 @@ class Color {
   }
 
 } 
- 

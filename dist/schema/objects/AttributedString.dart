@@ -10,8 +10,8 @@ class AttributedString {
   static setModelWithMap(Map<String, dynamic> map, AttributedString model) {
     model.string = map['string'];
 
-    if (map['attributes']) {
-       model.attributes = map['attributes'].map((d) => new StringAttribute.fromMap(d));
+    if (map['attributes'] != null) {
+       model.attributes = map['attributes'].map((d) => new StringAttribute.fromMap(d)).toList();
     }
 
 	}
@@ -34,4 +34,3 @@ class AttributedString {
   }
 
 } 
- 

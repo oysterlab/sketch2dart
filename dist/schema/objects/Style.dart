@@ -1,3 +1,8 @@
+import './BorderOptions.dart';
+import './Blur.dart';
+import './TextStyle.dart';
+import './GraphicsContextSettings.dart';
+import './ColorControls.dart';
 import './Border.dart';
 import './Fill.dart';
 import './Shadow.dart';
@@ -7,34 +12,34 @@ class Style {
   final String _class = "style";
   String do_objectID;
   List borders;
-  Object borderOptions;
-  Object blur;
+  BorderOptions borderOptions;
+  Blur blur;
   List fills;
   int startMarkerType;
   int endMarkerType;
   int miterLimit;
   int windingRule;
-  Object textStyle;
+  TextStyle textStyle;
   List shadows;
   List innerShadows;
-  Object contextSettings;
-  Object colorControls;
+  GraphicsContextSettings contextSettings;
+  ColorControls colorControls;
 
   Style();
 
   static setModelWithMap(Map<String, dynamic> map, Style model) {
     model.do_objectID = map['do_objectID'];
 
-    if (map['borders']) {
-       model.borders = map['borders'].map((d) => new Border.fromMap(d));
+    if (map['borders'] != null) {
+       model.borders = map['borders'].map((d) => new Border.fromMap(d)).toList();
     }
 
-    model.borderOptions = map['borderOptions'];
+    model.borderOptions = map['borderOptions'] != null ? new BorderOptions.fromMap(map['borderOptions']) : null;
 
-    model.blur = map['blur'];
+    model.blur = map['blur'] != null ? new Blur.fromMap(map['blur']) : null;
 
-    if (map['fills']) {
-       model.fills = map['fills'].map((d) => new Fill.fromMap(d));
+    if (map['fills'] != null) {
+       model.fills = map['fills'].map((d) => new Fill.fromMap(d)).toList();
     }
 
     model.startMarkerType = map['startMarkerType'];
@@ -45,19 +50,19 @@ class Style {
 
     model.windingRule = map['windingRule'];
 
-    model.textStyle = map['textStyle'];
+    model.textStyle = map['textStyle'] != null ? new TextStyle.fromMap(map['textStyle']) : null;
 
-    if (map['shadows']) {
-       model.shadows = map['shadows'].map((d) => new Shadow.fromMap(d));
+    if (map['shadows'] != null) {
+       model.shadows = map['shadows'].map((d) => new Shadow.fromMap(d)).toList();
     }
 
-    if (map['innerShadows']) {
-       model.innerShadows = map['innerShadows'].map((d) => new InnerShadow.fromMap(d));
+    if (map['innerShadows'] != null) {
+       model.innerShadows = map['innerShadows'].map((d) => new InnerShadow.fromMap(d)).toList();
     }
 
-    model.contextSettings = map['contextSettings'];
+    model.contextSettings = map['contextSettings'] != null ? new GraphicsContextSettings.fromMap(map['contextSettings']) : null;
 
-    model.colorControls = map['colorControls'];
+    model.colorControls = map['colorControls'] != null ? new ColorControls.fromMap(map['colorControls']) : null;
 
 	}
 
@@ -79,4 +84,3 @@ class Style {
   }
 
 } 
- 

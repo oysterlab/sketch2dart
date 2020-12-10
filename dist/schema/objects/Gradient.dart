@@ -19,8 +19,8 @@ class Gradient {
 
     model.to = map['to'];
 
-    if (map['stops']) {
-       model.stops = map['stops'].map((d) => new GradientStop.fromMap(d));
+    if (map['stops'] != null) {
+       model.stops = map['stops'].map((d) => new GradientStop.fromMap(d)).toList();
     }
 
 	}
@@ -43,4 +43,3 @@ class Gradient {
   }
 
 } 
- 

@@ -18,8 +18,8 @@ class AbstractShapeLayer extends AbstractLayer {
 
     model.pointRadiusBehaviour = map['pointRadiusBehaviour'];
 
-    if (map['points']) {
-       model.points = map['points'].map((d) => new CurvePoint.fromMap(d));
+    if (map['points'] != null) {
+       model.points = map['points'].map((d) => new CurvePoint.fromMap(d)).toList();
     }
 
 	}
@@ -42,4 +42,3 @@ class AbstractShapeLayer extends AbstractLayer {
   }
 
 } 
- 

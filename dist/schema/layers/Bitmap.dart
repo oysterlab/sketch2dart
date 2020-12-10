@@ -17,7 +17,7 @@ class Bitmap extends AbstractLayer {
     model.fillReplacesImage = map['fillReplacesImage'];
 
     dynamic image_t = map['image'];
-    if (image_t) {
+    if (image_t != null) {
       switch(image_t['_class']) {
         case 'MSJSONFileReference':
           model.image = map['image'] != null ? new FileRef.fromMap(map['image']) : null;
@@ -56,4 +56,3 @@ class Bitmap extends AbstractLayer {
   }
 
 } 
- 

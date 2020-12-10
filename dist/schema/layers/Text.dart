@@ -1,8 +1,9 @@
 import './AbstractLayer.dart';
+import '../objects/AttributedString.dart';
 
 class Text extends AbstractLayer {
   final String _class = "text";
-  Object attributedString;
+  AttributedString attributedString;
   bool automaticallyDrawOnUnderlyingPath;
   bool dontSynchroniseWithSymbol;
   int lineSpacingBehaviour;
@@ -14,7 +15,7 @@ class Text extends AbstractLayer {
   static setModelWithMap(Map<String, dynamic> map, Text model) {
     AbstractLayer.setModelWithMap(map, model);
 
-    model.attributedString = map['attributedString'];
+    model.attributedString = map['attributedString'] != null ? new AttributedString.fromMap(map['attributedString']) : null;
 
     model.automaticallyDrawOnUnderlyingPath = map['automaticallyDrawOnUnderlyingPath'];
 
@@ -46,4 +47,3 @@ class Text extends AbstractLayer {
   }
 
 } 
- 

@@ -1,10 +1,14 @@
+import '../objects/ExportOptions.dart';
+import '../objects/Rect.dart';
+import '../objects/FlowConnection.dart';
+import '../objects/Style.dart';
 
 class AbstractLayer {
   String do_objectID;
   int booleanOperation;
-  Object exportOptions;
-  Object frame;
-  Object flow;
+  ExportOptions exportOptions;
+  Rect frame;
+  FlowConnection flow;
   bool isFixedToViewport;
   bool isFlippedHorizontal;
   bool isFlippedVertical;
@@ -21,7 +25,7 @@ class AbstractLayer {
   bool hasClippingMask;
   int clippingMaskMode;
   dynamic userInfo;
-  Object style;
+  Style style;
   bool maintainScrollPosition;
 
   AbstractLayer();
@@ -31,11 +35,11 @@ class AbstractLayer {
 
     model.booleanOperation = map['booleanOperation'];
 
-    model.exportOptions = map['exportOptions'];
+    model.exportOptions = map['exportOptions'] != null ? new ExportOptions.fromMap(map['exportOptions']) : null;
 
-    model.frame = map['frame'];
+    model.frame = map['frame'] != null ? new Rect.fromMap(map['frame']) : null;
 
-    model.flow = map['flow'];
+    model.flow = map['flow'] != null ? new FlowConnection.fromMap(map['flow']) : null;
 
     model.isFixedToViewport = map['isFixedToViewport'];
 
@@ -69,7 +73,7 @@ class AbstractLayer {
 
     model.userInfo = map['userInfo'];
 
-    model.style = map['style'];
+    model.style = map['style'] != null ? new Style.fromMap(map['style']) : null;
 
     model.maintainScrollPosition = map['maintainScrollPosition'];
 
@@ -93,7 +97,6 @@ class AbstractLayer {
   }
 
 } 
- 
 class AbstractLayer_UserInfo {
 
   AbstractLayer_UserInfo();
@@ -119,4 +122,3 @@ class AbstractLayer_UserInfo {
   }
 
 } 
- 

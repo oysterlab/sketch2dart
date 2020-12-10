@@ -1,13 +1,14 @@
+import './OverrideName.dart';
 
 class OverrideProperty {
   final String _class = "MSImmutableOverrideProperty";
-  Object overrideName;
+  OverrideName overrideName;
   bool canOverride;
 
   OverrideProperty();
 
   static setModelWithMap(Map<String, dynamic> map, OverrideProperty model) {
-    model.overrideName = map['overrideName'];
+    model.overrideName = map['overrideName'] != null ? new OverrideName.fromMap(map['overrideName']) : null;
 
     model.canOverride = map['canOverride'];
 
@@ -31,4 +32,3 @@ class OverrideProperty {
   }
 
 } 
- 

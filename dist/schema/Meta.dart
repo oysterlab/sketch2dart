@@ -58,7 +58,31 @@ class Meta {
   }
 
 } 
- 
+class Meta_PagesAndArtboards {
+
+  Meta_PagesAndArtboards();
+
+  static setModelWithMap(Map<String, dynamic> map, Meta_PagesAndArtboards model) {
+	}
+
+  factory Meta_PagesAndArtboards.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+    Meta_PagesAndArtboards model = Meta_PagesAndArtboards();
+	  Meta_PagesAndArtboards.setModelWithMap(map, model);
+    return model;
+  }
+
+  Map<String, dynamic> toMap() {
+	  return {
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Meta_PagesAndArtboards()';
+  }
+
+} 
 class Meta_Created {
   String commit;
   String appVersion;
@@ -105,4 +129,3 @@ class Meta_Created {
   }
 
 } 
- 

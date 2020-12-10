@@ -1,9 +1,10 @@
 import './AbstractLayer.dart';
+import '../objects/Color.dart';
 
 class Slice extends AbstractLayer {
   final String _class = "slice";
   bool hasBackgroundColor;
-  Object backgroundColor;
+  Color backgroundColor;
 
   Slice();
 
@@ -12,7 +13,7 @@ class Slice extends AbstractLayer {
 
     model.hasBackgroundColor = map['hasBackgroundColor'];
 
-    model.backgroundColor = map['backgroundColor'];
+    model.backgroundColor = map['backgroundColor'] != null ? new Color.fromMap(map['backgroundColor']) : null;
 
 	}
 
@@ -34,4 +35,3 @@ class Slice extends AbstractLayer {
   }
 
 } 
- 

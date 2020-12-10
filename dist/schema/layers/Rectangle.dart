@@ -37,4 +37,3 @@ class Rectangle extends AbstractShapeLayer {
   }
 
 } 
- 

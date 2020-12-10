@@ -1,3 +1,4 @@
+import './ImageCollection.dart';
 import './ColorAsset.dart';
 import './GradientAsset.dart';
 import './FileRef.dart';
@@ -8,7 +9,7 @@ import './Gradient.dart';
 class AssetCollection {
   final String _class = "assetCollection";
   String do_objectID;
-  Object imageCollection;
+  ImageCollection imageCollection;
   List colorAssets;
   List gradientAssets;
   List images;
@@ -21,16 +22,16 @@ class AssetCollection {
   static setModelWithMap(Map<String, dynamic> map, AssetCollection model) {
     model.do_objectID = map['do_objectID'];
 
-    model.imageCollection = map['imageCollection'];
+    model.imageCollection = map['imageCollection'] != null ? new ImageCollection.fromMap(map['imageCollection']) : null;
 
-    if (map['colorAssets']) {
-       model.colorAssets = map['colorAssets'].map((d) => new ColorAsset.fromMap(d));
+    if (map['colorAssets'] != null) {
+       model.colorAssets = map['colorAssets'].map((d) => new ColorAsset.fromMap(d)).toList();
     }
 
-    if (map['gradientAssets']) {
-       model.gradientAssets = map['gradientAssets'].map((d) => new GradientAsset.fromMap(d));
+    if (map['gradientAssets'] != null) {
+       model.gradientAssets = map['gradientAssets'].map((d) => new GradientAsset.fromMap(d)).toList();
     }
-    if (map['images']) {
+    if (map['images'] != null) {
       model.images = map['images'].map((d) {
         dynamic model = null;
         switch(d['_class']) {
@@ -47,15 +48,15 @@ class AssetCollection {
         }
 
         return model;
-      });
+      }).toList();
     }
 
-    if (map['colors']) {
-       model.colors = map['colors'].map((d) => new Color.fromMap(d));
+    if (map['colors'] != null) {
+       model.colors = map['colors'].map((d) => new Color.fromMap(d)).toList();
     }
 
-    if (map['gradients']) {
-       model.gradients = map['gradients'].map((d) => new Gradient.fromMap(d));
+    if (map['gradients'] != null) {
+       model.gradients = map['gradients'].map((d) => new Gradient.fromMap(d)).toList();
     }
 
     model.exportPresets = List.from(map['exportPresets']);
@@ -80,4 +81,3 @@ class AssetCollection {
   }
 
 } 
- 

@@ -24,7 +24,7 @@ function _generateOneOfSwitchCode(oneOfs:any, propName: string) {
 	const varName = propName + "_t"
 	let importCode = ''
 	let switchCode = "    dynamic " + varName + " = map['" + propName + "'];\n" +
-					 "    if (" + varName+ ") {\n"
+					 "    if (" + varName+ " != null) {\n"
 	switchCode += "      switch(" + varName + "['_class']) {\n" 
 	switchCode += oneOfs.reduce((switchCodeSnippet:string, oneOf:any) => {
 		if (oneOf['$ref']) {
@@ -59,7 +59,7 @@ function _generateOneOfSwitchCodeArray(oneOfs:any, propName: string) {
 	let importCode = ''
 
 	let code = ''
-	code += "    if (map['" + propName + "']) {\n"
+	code += "    if (map['" + propName + "'] != null) {\n"
 	code += "      model."+propName+" = map['" + propName + "'].map((d) {\n"
 	code += "        dynamic model = null;\n"
 
@@ -93,7 +93,7 @@ function _generateOneOfSwitchCodeArray(oneOfs:any, propName: string) {
 
 
 	code += "        return model;\n"
-	code += "      });\n"	
+	code += "      }).toList();\n"	
 	code += "    }\n"	
 
 
@@ -240,8 +240,8 @@ function _generateDataClassFunctionCode(schema: any) {
 							importCode += "import '" + path.dirname(ref) + '/' + className + ".dart';\n"
 							
 							setModelWithMapCode += '\n'
-							setModelWithMapCode += "    if (map['" + propName + "']) {\n"
-							setModelWithMapCode += "       model." + propName + " = map['"+propName+"'].map((d) => new " + className + '.fromMap(d));\n'		
+							setModelWithMapCode += "    if (map['" + propName + "'] != null) {\n"
+							setModelWithMapCode += "       model." + propName + " = map['"+propName+"'].map((d) => new " + className + '.fromMap(d)).toList();\n'		
 							setModelWithMapCode += "    }\n"					
  
 						} else if (items.hasOwnProperty('oneOf')) {
@@ -279,12 +279,13 @@ function _generateDataClassFunctionCode(schema: any) {
 			}
 		} else if (prop.hasOwnProperty('$ref')) {
 			const classType = prop['classType']
-			if (classType == 'object') {
-				const propClassName = propName[0].toUpperCase() + propName.substr(1)
-				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'] != null ? new " + propClassName + ".fromMap(map['"+propName+"']) : null;\n"
-
+			const className = prop['className']
+			if (classType == 'Object') {
+				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'] != null ? new " + className + ".fromMap(map['"+propName+"']) : null;\n"
+			} else if (classType == 'double') {
+				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'].toDouble();\n"
 			} else {
-				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'];\n"
+				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'];\n"				
 			}
 
 		} else if (prop.hasOwnProperty('allOf')) {
@@ -346,12 +347,12 @@ function _generateDataClassFunctionCode(schema: any) {
 	}
 }
 
-function _generateClassCode(schema: any) {
+function _generateClassCode(schema: any, isSubClass: boolean = false) {
 	const className = schema['className']
 	const allOf = schema['allOf']
 	let properties = schema['properties']
-	let importCodes = ''
 	let definePropsCodes = ''
+	let importCodes = ''
 	let extendsCode = ''
 	let subClassCode = ''
 	let dataClassCode = ''
@@ -399,12 +400,16 @@ function _generateClassCode(schema: any) {
 						type = 'dynamic'
 					}
 
-					subClassCode = _generateClassCode(prop)
+					const sub:any = _generateClassCode(prop, true)
+					importCodes += sub['importCodes']
+					subClassCode += sub['classCode']
+
 				break
 			}
 		} else if (prop.hasOwnProperty('$ref')) {
 			const classType = prop['classType']
-			if (classType == 'object') {
+			
+			if (classType == 'Object') {
 				type = prop['className']
 				const importCode = "import '"+path.dirname(prop['$ref']) + '/' + type + ".dart';\n"
 				importCodes += importCode
@@ -415,7 +420,10 @@ function _generateClassCode(schema: any) {
 		} else if (prop.hasOwnProperty('allOf')) {
 			prop['className'] = className + '_' + prop['allOf'][0]['className']
 			type = prop['className']
-			subClassCode = _generateClassCode(prop)				
+
+			const sub:any = _generateClassCode(prop, true)
+			importCodes += sub['importCodes']
+			subClassCode += sub['classCode']
 		} else if (prop.hasOwnProperty('oneOf')) {
 			type = 'dynamic'
 		} 
@@ -432,11 +440,25 @@ function _generateClassCode(schema: any) {
 	importCodes += dataClassResult['importCode']
 	dataClassCode += dataClassResult['dataClassCode']
 
-	return importCodes + '\n'
-				+ 'class ' + className + extendsCode + ' {\n'
-			 + definePropsCodes + '\n'
-			 + dataClassCode + '\n'
-			 + '} \n ' + subClassCode
+	if (isSubClass) {
+		const subClassCode = 'class ' + className + extendsCode + ' {\n'
+		+ definePropsCodes + '\n'
+		+ dataClassCode + '\n'
+		+ '} \n'
+		const subImportCode = importCodes
+		return {
+			classCode: subClassCode,
+			importCodes: subImportCode
+		}
+	} else {
+		return importCodes + '\n'
+		+ 'class ' + className + extendsCode + ' {\n'
+	 + definePropsCodes + '\n'
+	 + dataClassCode + '\n'
+	 + '} \n' + subClassCode
+	}
+
+
 }
 
 function _generateEnumCode(schema: any) {
@@ -484,7 +506,16 @@ function generateDartCode(schema: any) {
 			}
 	}
 
-	return 'class Empty { }'
+	return 'class ' + className + ' {\n' +
+		'    dynamic value;\n\n' +
+		'    ' + className + '();\n\n' +		
+		'    factory ' + className + '.fromMap(Map<String, dynamic> map) {\n' +
+		'      if (map == null) return null;\n' +
+		'      ' + className + ' model = ' + className + '();\n' +
+		'      model.value = map;\n' + 	
+		'      return model;\n' + 		
+		'    }\n' + 
+		'}\n';
 }
 
 
@@ -502,7 +533,7 @@ schemas.forEach((schema:any) => {
 	}
 
 	const dartPath = path.join(classPath, className + '.dart')
-	const dartCode = generateDartCode(schema)
+	const dartCode = generateDartCode(schema) as string;
 	fs.writeFileSync(dartPath, dartCode)	
 })
 

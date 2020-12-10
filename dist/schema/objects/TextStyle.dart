@@ -1,3 +1,6 @@
+import './ParagraphStyle.dart';
+import './FontDescriptor.dart';
+import './Color.dart';
 
 class TextStyle {
   final String _class = "textStyle";
@@ -31,21 +34,20 @@ class TextStyle {
   }
 
 } 
- 
 class TextStyle_EncodedAttributes {
-  Object paragraphStyle;
+  ParagraphStyle paragraphStyle;
   int MSAttributedStringTextTransformAttribute;
   int underlineStyle;
   final String strikethroughStyle = "0";
   double kerning;
-  Object MSAttributedStringFontAttribute;
+  FontDescriptor MSAttributedStringFontAttribute;
   int textStyleVerticalAlignmentKey;
-  Object MSAttributedStringColorAttribute;
+  Color MSAttributedStringColorAttribute;
 
   TextStyle_EncodedAttributes();
 
   static setModelWithMap(Map<String, dynamic> map, TextStyle_EncodedAttributes model) {
-    model.paragraphStyle = map['paragraphStyle'];
+    model.paragraphStyle = map['paragraphStyle'] != null ? new ParagraphStyle.fromMap(map['paragraphStyle']) : null;
 
     model.MSAttributedStringTextTransformAttribute = map['MSAttributedStringTextTransformAttribute'];
 
@@ -53,11 +55,11 @@ class TextStyle_EncodedAttributes {
 
     model.kerning = map['kerning'] != null ? map['kerning'].toDouble() : 0.0;
 
-    model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'];
+    model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'] != null ? new FontDescriptor.fromMap(map['MSAttributedStringFontAttribute']) : null;
 
     model.textStyleVerticalAlignmentKey = map['textStyleVerticalAlignmentKey'];
 
-    model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'];
+    model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'] != null ? new Color.fromMap(map['MSAttributedStringColorAttribute']) : null;
 
 	}
 
@@ -79,4 +81,3 @@ class TextStyle_EncodedAttributes {
   }
 
 } 
- 

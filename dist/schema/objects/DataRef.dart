@@ -1,9 +1,10 @@
+
 class DataRef {
   final String _class = "MSJSONOriginalDataReference";
   String _ref_class;
   String _ref;
-  dynamic data;
-  dynamic sha1;
+  DataRef_Data data;
+  DataRef_Sha1 sha1;
 
   DataRef();
 
@@ -15,25 +16,55 @@ class DataRef {
     model.data = map['data'];
 
     model.sha1 = map['sha1'];
-  }
+
+	}
 
   factory DataRef.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
     DataRef model = DataRef();
-    DataRef.setModelWithMap(map, model);
+	  DataRef.setModelWithMap(map, model);
     return model;
   }
 
   Map<String, dynamic> toMap() {
-    return {};
+	  return {
+    };
   }
 
   @override
   String toString() {
     return 'DataRef()';
   }
-}
 
+} 
+class DataRef_Data {
+  String _data;
+
+  DataRef_Data();
+
+  static setModelWithMap(Map<String, dynamic> map, DataRef_Data model) {
+    model._data = map['_data'];
+
+	}
+
+  factory DataRef_Data.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+    DataRef_Data model = DataRef_Data();
+	  DataRef_Data.setModelWithMap(map, model);
+    return model;
+  }
+
+  Map<String, dynamic> toMap() {
+	  return {
+    };
+  }
+
+  @override
+  String toString() {
+    return 'DataRef_Data()';
+  }
+
+} 
 class DataRef_Sha1 {
   String _data;
 
@@ -41,21 +72,24 @@ class DataRef_Sha1 {
 
   static setModelWithMap(Map<String, dynamic> map, DataRef_Sha1 model) {
     model._data = map['_data'];
-  }
+
+	}
 
   factory DataRef_Sha1.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
     DataRef_Sha1 model = DataRef_Sha1();
-    DataRef_Sha1.setModelWithMap(map, model);
+	  DataRef_Sha1.setModelWithMap(map, model);
     return model;
   }
 
   Map<String, dynamic> toMap() {
-    return {};
+	  return {
+    };
   }
 
   @override
   String toString() {
     return 'DataRef_Sha1()';
   }
-}
+
+} 

@@ -27,7 +27,6 @@ class User {
   }
 
 } 
- 
 class User_Document {
   int pageListHeight;
   int pageListCollapsed;
@@ -68,4 +67,3 @@ class User_Document {
   }
 
 } 
- 

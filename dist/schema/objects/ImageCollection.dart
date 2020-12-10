@@ -28,7 +28,6 @@ class ImageCollection {
   }
 
 } 
- 
 class ImageCollection_Images {
 
   ImageCollection_Images();
@@ -54,4 +53,3 @@ class ImageCollection_Images {
   }
 
 } 
- 

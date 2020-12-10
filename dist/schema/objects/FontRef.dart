@@ -1,7 +1,8 @@
+import './DataRef.dart';
 
 class FontRef {
   final String _class = "fontReference";
-  Object fontData;
+  DataRef fontData;
   String fontFamilyName;
   String fontFileName;
   int options;
@@ -10,7 +11,7 @@ class FontRef {
   FontRef();
 
   static setModelWithMap(Map<String, dynamic> map, FontRef model) {
-    model.fontData = map['fontData'];
+    model.fontData = map['fontData'] != null ? new DataRef.fromMap(map['fontData']) : null;
 
     model.fontFamilyName = map['fontFamilyName'];
 
@@ -40,4 +41,3 @@ class FontRef {
   }
 
 } 
- 

@@ -10,8 +10,8 @@ class SwatchContainer {
   static setModelWithMap(Map<String, dynamic> map, SwatchContainer model) {
     model.do_objectID = map['do_objectID'];
 
-    if (map['objects']) {
-       model.objects = map['objects'].map((d) => new Swatch.fromMap(d));
+    if (map['objects'] != null) {
+       model.objects = map['objects'].map((d) => new Swatch.fromMap(d)).toList();
     }
 
 	}
@@ -34,4 +34,3 @@ class SwatchContainer {
   }
 
 } 
- 

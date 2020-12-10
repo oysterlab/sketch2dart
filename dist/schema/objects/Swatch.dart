@@ -1,9 +1,10 @@
+import './Color.dart';
 
 class Swatch {
   final String _class = "swatch";
   String do_objectID;
   String name;
-  Object value;
+  Color value;
 
   Swatch();
 
@@ -12,7 +13,7 @@ class Swatch {
 
     model.name = map['name'];
 
-    model.value = map['value'];
+    model.value = map['value'] != null ? new Color.fromMap(map['value']) : null;
 
 	}
 
@@ -34,4 +35,3 @@ class Swatch {
   }
 
 } 
- 

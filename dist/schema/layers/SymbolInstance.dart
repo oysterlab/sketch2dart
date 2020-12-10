@@ -14,8 +14,8 @@ class SymbolInstance extends AbstractLayer {
   static setModelWithMap(Map<String, dynamic> map, SymbolInstance model) {
     AbstractLayer.setModelWithMap(map, model);
 
-    if (map['overrideValues']) {
-       model.overrideValues = map['overrideValues'].map((d) => new OverrideValue.fromMap(d));
+    if (map['overrideValues'] != null) {
+       model.overrideValues = map['overrideValues'].map((d) => new OverrideValue.fromMap(d)).toList();
     }
 
     model.scale = map['scale'] != null ? map['scale'].toDouble() : 0.0;
@@ -46,4 +46,3 @@ class SymbolInstance extends AbstractLayer {
   }
 
 } 
- 

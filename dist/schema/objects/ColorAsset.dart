@@ -1,9 +1,10 @@
+import './Color.dart';
 
 class ColorAsset {
   final String _class = "MSImmutableColorAsset";
   String do_objectID;
   String name;
-  Object color;
+  Color color;
 
   ColorAsset();
 
@@ -12,7 +13,7 @@ class ColorAsset {
 
     model.name = map['name'];
 
-    model.color = map['color'];
+    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
 
 	}
 
@@ -34,4 +35,3 @@ class ColorAsset {
   }
 
 } 
- 

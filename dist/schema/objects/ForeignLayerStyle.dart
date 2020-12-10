@@ -1,3 +1,4 @@
+import './SharedStyle.dart';
 
 class ForeignLayerStyle {
   final String _class = "MSImmutableForeignLayerStyle";
@@ -6,7 +7,7 @@ class ForeignLayerStyle {
   String sourceLibraryName;
   bool symbolPrivate;
   String remoteStyleID;
-  Object localSharedStyle;
+  SharedStyle localSharedStyle;
 
   ForeignLayerStyle();
 
@@ -21,7 +22,7 @@ class ForeignLayerStyle {
 
     model.remoteStyleID = map['remoteStyleID'];
 
-    model.localSharedStyle = map['localSharedStyle'];
+    model.localSharedStyle = map['localSharedStyle'] != null ? new SharedStyle.fromMap(map['localSharedStyle']) : null;
 
 	}
 
@@ -43,4 +44,3 @@ class ForeignLayerStyle {
   }
 
 } 
- 

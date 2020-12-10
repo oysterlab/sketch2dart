@@ -1,3 +1,5 @@
+import '../layers/SymbolMaster.dart';
+import '../layers/SymbolMaster.dart';
 
 class ForeignSymbol {
   final String _class = "MSImmutableForeignSymbol";
@@ -5,8 +7,8 @@ class ForeignSymbol {
   String libraryID;
   String sourceLibraryName;
   bool symbolPrivate;
-  Object originalMaster;
-  Object symbolMaster;
+  SymbolMaster originalMaster;
+  SymbolMaster symbolMaster;
   bool missingLibraryFontAcknowledged;
 
   ForeignSymbol();
@@ -20,9 +22,9 @@ class ForeignSymbol {
 
     model.symbolPrivate = map['symbolPrivate'];
 
-    model.originalMaster = map['originalMaster'];
+    model.originalMaster = map['originalMaster'] != null ? new SymbolMaster.fromMap(map['originalMaster']) : null;
 
-    model.symbolMaster = map['symbolMaster'];
+    model.symbolMaster = map['symbolMaster'] != null ? new SymbolMaster.fromMap(map['symbolMaster']) : null;
 
     model.missingLibraryFontAcknowledged = map['missingLibraryFontAcknowledged'];
 
@@ -46,4 +48,3 @@ class ForeignSymbol {
   }
 
 } 
- 

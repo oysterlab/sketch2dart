@@ -1,14 +1,19 @@
 import './AbstractGroup.dart';
+import '../objects/RulerData.dart';
+import '../objects/RulerData.dart';
+import '../objects/LayoutGrid.dart';
+import '../objects/SimpleGrid.dart';
+import '../objects/Color.dart';
 
 class Artboard extends AbstractGroup {
   final String _class = "artboard";
   bool includeInCloudUpload;
   bool includeBackgroundColorInExport;
-  Object horizontalRulerData;
-  Object verticalRulerData;
-  Object layout;
-  Object grid;
-  Object backgroundColor;
+  RulerData horizontalRulerData;
+  RulerData verticalRulerData;
+  LayoutGrid layout;
+  SimpleGrid grid;
+  Color backgroundColor;
   bool hasBackgroundColor;
   bool isFlowHome;
   bool resizesContent;
@@ -23,15 +28,15 @@ class Artboard extends AbstractGroup {
 
     model.includeBackgroundColorInExport = map['includeBackgroundColorInExport'];
 
-    model.horizontalRulerData = map['horizontalRulerData'];
+    model.horizontalRulerData = map['horizontalRulerData'] != null ? new RulerData.fromMap(map['horizontalRulerData']) : null;
 
-    model.verticalRulerData = map['verticalRulerData'];
+    model.verticalRulerData = map['verticalRulerData'] != null ? new RulerData.fromMap(map['verticalRulerData']) : null;
 
-    model.layout = map['layout'];
+    model.layout = map['layout'] != null ? new LayoutGrid.fromMap(map['layout']) : null;
 
-    model.grid = map['grid'];
+    model.grid = map['grid'] != null ? new SimpleGrid.fromMap(map['grid']) : null;
 
-    model.backgroundColor = map['backgroundColor'];
+    model.backgroundColor = map['backgroundColor'] != null ? new Color.fromMap(map['backgroundColor']) : null;
 
     model.hasBackgroundColor = map['hasBackgroundColor'];
 
@@ -61,7 +66,6 @@ class Artboard extends AbstractGroup {
   }
 
 } 
- 
 class Artboard_PresetDictionary {
 
   Artboard_PresetDictionary();
@@ -87,4 +91,3 @@ class Artboard_PresetDictionary {
   }
 
 } 
- 

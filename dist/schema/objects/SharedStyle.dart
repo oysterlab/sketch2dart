@@ -1,9 +1,10 @@
+import './Style.dart';
 
 class SharedStyle {
   final String _class = "sharedStyle";
   String do_objectID;
   String name;
-  Object value;
+  Style value;
 
   SharedStyle();
 
@@ -12,7 +13,7 @@ class SharedStyle {
 
     model.name = map['name'];
 
-    model.value = map['value'];
+    model.value = map['value'] != null ? new Style.fromMap(map['value']) : null;
 
 	}
 
@@ -34,4 +35,3 @@ class SharedStyle {
   }
 
 } 
- 

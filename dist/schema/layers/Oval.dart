@@ -28,4 +28,3 @@ class Oval extends AbstractShapeLayer {
   }
 
 } 
- 

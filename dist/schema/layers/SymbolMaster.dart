@@ -1,16 +1,19 @@
 import './AbstractGroup.dart';
+import '../objects/Color.dart';
+import '../objects/RulerData.dart';
+import '../objects/RulerData.dart';
 import '../objects/OverrideProperty.dart';
 
 class SymbolMaster extends AbstractGroup {
   final String _class = "symbolMaster";
-  Object backgroundColor;
+  Color backgroundColor;
   bool hasBackgroundColor;
-  Object horizontalRulerData;
+  RulerData horizontalRulerData;
   bool includeBackgroundColorInExport;
   bool includeInCloudUpload;
   bool isFlowHome;
   bool resizesContent;
-  Object verticalRulerData;
+  RulerData verticalRulerData;
   bool includeBackgroundColorInInstance;
   String symbolID;
   bool allowsOverrides;
@@ -22,11 +25,11 @@ class SymbolMaster extends AbstractGroup {
   static setModelWithMap(Map<String, dynamic> map, SymbolMaster model) {
     AbstractGroup.setModelWithMap(map, model);
 
-    model.backgroundColor = map['backgroundColor'];
+    model.backgroundColor = map['backgroundColor'] != null ? new Color.fromMap(map['backgroundColor']) : null;
 
     model.hasBackgroundColor = map['hasBackgroundColor'];
 
-    model.horizontalRulerData = map['horizontalRulerData'];
+    model.horizontalRulerData = map['horizontalRulerData'] != null ? new RulerData.fromMap(map['horizontalRulerData']) : null;
 
     model.includeBackgroundColorInExport = map['includeBackgroundColorInExport'];
 
@@ -36,7 +39,7 @@ class SymbolMaster extends AbstractGroup {
 
     model.resizesContent = map['resizesContent'];
 
-    model.verticalRulerData = map['verticalRulerData'];
+    model.verticalRulerData = map['verticalRulerData'] != null ? new RulerData.fromMap(map['verticalRulerData']) : null;
 
     model.includeBackgroundColorInInstance = map['includeBackgroundColorInInstance'];
 
@@ -44,8 +47,8 @@ class SymbolMaster extends AbstractGroup {
 
     model.allowsOverrides = map['allowsOverrides'];
 
-    if (map['overrideProperties']) {
-       model.overrideProperties = map['overrideProperties'].map((d) => new OverrideProperty.fromMap(d));
+    if (map['overrideProperties'] != null) {
+       model.overrideProperties = map['overrideProperties'].map((d) => new OverrideProperty.fromMap(d)).toList();
     }
 
     model.presetDictionary = map['presetDictionary'];
@@ -70,7 +73,6 @@ class SymbolMaster extends AbstractGroup {
   }
 
 } 
- 
 class SymbolMaster_PresetDictionary {
 
   SymbolMaster_PresetDictionary();
@@ -96,4 +98,3 @@ class SymbolMaster_PresetDictionary {
   }
 
 } 
- 

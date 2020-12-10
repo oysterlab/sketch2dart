@@ -30,7 +30,7 @@ class AbstractGroup extends AbstractLayer {
     model.hasClickThrough = map['hasClickThrough'];
 
     dynamic groupLayout_t = map['groupLayout'];
-    if (groupLayout_t) {
+    if (groupLayout_t != null) {
       switch(groupLayout_t['_class']) {
         case 'MSImmutableFreeformGroupLayout':
           model.groupLayout = map['groupLayout'] != null ? new FreeformGroupLayout.fromMap(map['groupLayout']) : null;
@@ -44,7 +44,7 @@ class AbstractGroup extends AbstractLayer {
           break;
       }
     }
-    if (map['layers']) {
+    if (map['layers'] != null) {
       model.layers = map['layers'].map((d) {
         dynamic model = null;
         switch(d['_class']) {
@@ -113,7 +113,7 @@ class AbstractGroup extends AbstractLayer {
         }
 
         return model;
-      });
+      }).toList();
     }
 
 	}
@@ -136,4 +136,3 @@ class AbstractGroup extends AbstractLayer {
   }
 
 } 
- 

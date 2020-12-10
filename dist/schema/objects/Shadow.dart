@@ -1,10 +1,12 @@
+import './Color.dart';
+import './GraphicsContextSettings.dart';
 
 class Shadow {
   final String _class = "shadow";
   bool isEnabled;
   double blurRadius;
-  Object color;
-  Object contextSettings;
+  Color color;
+  GraphicsContextSettings contextSettings;
   double offsetX;
   double offsetY;
   double spread;
@@ -16,9 +18,9 @@ class Shadow {
 
     model.blurRadius = map['blurRadius'] != null ? map['blurRadius'].toDouble() : 0.0;
 
-    model.color = map['color'];
+    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
 
-    model.contextSettings = map['contextSettings'];
+    model.contextSettings = map['contextSettings'] != null ? new GraphicsContextSettings.fromMap(map['contextSettings']) : null;
 
     model.offsetX = map['offsetX'] != null ? map['offsetX'].toDouble() : 0.0;
 
@@ -46,4 +48,3 @@ class Shadow {
   }
 
 } 
- 
