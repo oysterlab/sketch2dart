@@ -7,6 +7,8 @@ class ColorControls {
   double hue;
   double saturation;
 
+  dynamic noneFilteredValue;
+
   ColorControls();
 
   static setModelWithMap(Map<String, dynamic> map, ColorControls model) {
@@ -28,6 +30,12 @@ class ColorControls {
 	  ColorControls.setModelWithMap(map, model);
     return model;
   }
+
+    factory ColorControls.fromValue(dynamic v) {
+	    ColorControls model = ColorControls();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

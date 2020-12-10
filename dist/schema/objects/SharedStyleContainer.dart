@@ -5,6 +5,8 @@ class SharedStyleContainer {
   final String _class = "sharedStyleContainer";
   List objects;
 
+  dynamic noneFilteredValue;
+
   SharedStyleContainer();
 
   static setModelWithMap(Map<String, dynamic> map, SharedStyleContainer model) {
@@ -22,6 +24,12 @@ class SharedStyleContainer {
 	  SharedStyleContainer.setModelWithMap(map, model);
     return model;
   }
+
+    factory SharedStyleContainer.fromValue(dynamic v) {
+	    SharedStyleContainer model = SharedStyleContainer();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

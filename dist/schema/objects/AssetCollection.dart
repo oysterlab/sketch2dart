@@ -17,12 +17,18 @@ class AssetCollection {
   List gradients;
   List exportPresets;
 
+  dynamic noneFilteredValue;
+
   AssetCollection();
 
   static setModelWithMap(Map<String, dynamic> map, AssetCollection model) {
     model.do_objectID = map['do_objectID'];
 
-    model.imageCollection = map['imageCollection'] != null ? new ImageCollection.fromMap(map['imageCollection']) : null;
+	  if (map['imageCollection'] is Map) {
+		  model.imageCollection = map['imageCollection'] != null ? new ImageCollection.fromMap(map['imageCollection']) : null;
+	  } else {
+		  model.imageCollection = ImageCollection.fromValue(map['imageCollection']);
+	  }
 
     if (map['colorAssets'] != null) {
        model.colorAssets = map['colorAssets'].map((d) => new ColorAsset.fromMap(d)).toList();
@@ -69,6 +75,12 @@ class AssetCollection {
 	  AssetCollection.setModelWithMap(map, model);
     return model;
   }
+
+    factory AssetCollection.fromValue(dynamic v) {
+	    AssetCollection model = AssetCollection();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

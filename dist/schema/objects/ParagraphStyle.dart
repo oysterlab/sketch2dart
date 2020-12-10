@@ -7,6 +7,8 @@ class ParagraphStyle {
   double paragraphSpacing;
   double allowsDefaultTighteningForTruncation;
 
+  dynamic noneFilteredValue;
+
   ParagraphStyle();
 
   static setModelWithMap(Map<String, dynamic> map, ParagraphStyle model) {
@@ -28,6 +30,12 @@ class ParagraphStyle {
 	  ParagraphStyle.setModelWithMap(map, model);
     return model;
   }
+
+    factory ParagraphStyle.fromValue(dynamic v) {
+	    ParagraphStyle model = ParagraphStyle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

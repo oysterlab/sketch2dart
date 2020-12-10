@@ -7,6 +7,8 @@ class Color {
   double blue;
   String swatchID;
 
+  dynamic noneFilteredValue;
+
   Color();
 
   static setModelWithMap(Map<String, dynamic> map, Color model) {
@@ -28,6 +30,12 @@ class Color {
 	  Color.setModelWithMap(map, model);
     return model;
   }
+
+    factory Color.fromValue(dynamic v) {
+	    Color model = Color();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

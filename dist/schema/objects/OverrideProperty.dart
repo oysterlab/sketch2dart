@@ -5,10 +5,16 @@ class OverrideProperty {
   OverrideName overrideName;
   bool canOverride;
 
+  dynamic noneFilteredValue;
+
   OverrideProperty();
 
   static setModelWithMap(Map<String, dynamic> map, OverrideProperty model) {
-    model.overrideName = map['overrideName'] != null ? new OverrideName.fromMap(map['overrideName']) : null;
+	  if (map['overrideName'] is Map) {
+		  model.overrideName = map['overrideName'] != null ? new OverrideName.fromMap(map['overrideName']) : null;
+	  } else {
+		  model.overrideName = OverrideName.fromValue(map['overrideName']);
+	  }
 
     model.canOverride = map['canOverride'];
 
@@ -20,6 +26,12 @@ class OverrideProperty {
 	  OverrideProperty.setModelWithMap(map, model);
     return model;
   }
+
+    factory OverrideProperty.fromValue(dynamic v) {
+	    OverrideProperty model = OverrideProperty();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

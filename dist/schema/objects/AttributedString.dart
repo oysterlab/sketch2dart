@@ -5,6 +5,8 @@ class AttributedString {
   String string;
   List attributes;
 
+  dynamic noneFilteredValue;
+
   AttributedString();
 
   static setModelWithMap(Map<String, dynamic> map, AttributedString model) {
@@ -22,6 +24,12 @@ class AttributedString {
 	  AttributedString.setModelWithMap(map, model);
     return model;
   }
+
+    factory AttributedString.fromValue(dynamic v) {
+	    AttributedString model = AttributedString();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -4,6 +4,8 @@ class Triangle extends AbstractShapeLayer {
   final String _class = "triangle";
   bool isEquilateral;
 
+  dynamic noneFilteredValue;
+
   Triangle();
 
   static setModelWithMap(Map<String, dynamic> map, Triangle model) {
@@ -19,6 +21,12 @@ class Triangle extends AbstractShapeLayer {
 	  Triangle.setModelWithMap(map, model);
     return model;
   }
+
+    factory Triangle.fromValue(dynamic v) {
+	    Triangle model = Triangle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

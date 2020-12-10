@@ -10,14 +10,28 @@ class FileFormat {
   User user;
   Workspace workspace;
 
+  dynamic noneFilteredValue;
+
   FileFormat();
 
   static setModelWithMap(Map<String, dynamic> map, FileFormat model) {
-    model.meta = map['meta'] != null ? new Meta.fromMap(map['meta']) : null;
+	  if (map['meta'] is Map) {
+		  model.meta = map['meta'] != null ? new Meta.fromMap(map['meta']) : null;
+	  } else {
+		  model.meta = Meta.fromValue(map['meta']);
+	  }
 
-    model.user = map['user'] != null ? new User.fromMap(map['user']) : null;
+	  if (map['user'] is Map) {
+		  model.user = map['user'] != null ? new User.fromMap(map['user']) : null;
+	  } else {
+		  model.user = User.fromValue(map['user']);
+	  }
 
-    model.workspace = map['workspace'] != null ? new Workspace.fromMap(map['workspace']) : null;
+	  if (map['workspace'] is Map) {
+		  model.workspace = map['workspace'] != null ? new Workspace.fromMap(map['workspace']) : null;
+	  } else {
+		  model.workspace = Workspace.fromValue(map['workspace']);
+	  }
 
 	}
 
@@ -27,6 +41,12 @@ class FileFormat {
 	  FileFormat.setModelWithMap(map, model);
     return model;
   }
+
+    factory FileFormat.fromValue(dynamic v) {
+	    FileFormat model = FileFormat();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {
@@ -41,6 +61,8 @@ class FileFormat {
 } 
 class FileFormat_AbstractDocument extends AbstractDocument {
   List pages;
+
+  dynamic noneFilteredValue;
 
   FileFormat_AbstractDocument();
 
@@ -59,6 +81,12 @@ class FileFormat_AbstractDocument extends AbstractDocument {
 	  FileFormat_AbstractDocument.setModelWithMap(map, model);
     return model;
   }
+
+    factory FileFormat_AbstractDocument.fromValue(dynamic v) {
+	    FileFormat_AbstractDocument model = FileFormat_AbstractDocument();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -4,6 +4,8 @@ class FileRef {
   String _ref_class;
   String _ref;
 
+  dynamic noneFilteredValue;
+
   FileRef();
 
   static setModelWithMap(Map<String, dynamic> map, FileRef model) {
@@ -19,6 +21,12 @@ class FileRef {
 	  FileRef.setModelWithMap(map, model);
     return model;
   }
+
+    factory FileRef.fromValue(dynamic v) {
+	    FileRef model = FileRef();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -7,6 +7,8 @@ class AbstractShapeLayer extends AbstractLayer {
   int pointRadiusBehaviour;
   List points;
 
+  dynamic noneFilteredValue;
+
   AbstractShapeLayer();
 
   static setModelWithMap(Map<String, dynamic> map, AbstractShapeLayer model) {
@@ -30,6 +32,12 @@ class AbstractShapeLayer extends AbstractLayer {
 	  AbstractShapeLayer.setModelWithMap(map, model);
     return model;
   }
+
+    factory AbstractShapeLayer.fromValue(dynamic v) {
+	    AbstractShapeLayer model = AbstractShapeLayer();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -21,12 +21,10 @@ function getClassAliasName(schema: any) {
 }
 
 function _generateOneOfSwitchCode(oneOfs:any, propName: string) {
-	const varName = propName + "_t"
 	let importCode = ''
-	let switchCode = "    dynamic " + varName + " = map['" + propName + "'];\n" +
-					 "    if (" + varName+ " != null) {\n"
-	switchCode += "      switch(" + varName + "['_class']) {\n" 
-	switchCode += oneOfs.reduce((switchCodeSnippet:string, oneOf:any) => {
+	let switchCode = ''
+
+	const switchCodeSnippet = oneOfs.reduce((switchCodeSnippet:string, oneOf:any) => {
 		if (oneOf['$ref']) {
 			importCode += "import '" + path.dirname(oneOf['$ref']) + '/' + oneOf['className'] + ".dart';\n"
 		}
@@ -38,16 +36,36 @@ function _generateOneOfSwitchCode(oneOfs:any, propName: string) {
 		if (_class) {
 			switchCodeSnippet += "        case '" + _class + "':\n"
 			if (classType == 'Object') {
-				switchCodeSnippet += "          model." + propName + " = map['"+propName+"'] != null ? new " + className + ".fromMap(map['"+propName+"']) : null;\n"
+				switchCodeSnippet += "			    if (map['"+propName+"'] is Map) {\n"
+				switchCodeSnippet += "			      model." + propName + " = map['"+propName+"'] != null ? new " + className + ".fromMap(map['"+propName+"']) : null;\n"
+				switchCodeSnippet += "			    } else {\n"
+				switchCodeSnippet += "			      model." + propName + " = " + className + ".fromValue(map['"+propName+"']);\n"	
+				switchCodeSnippet += "			    }\n"			
 			}
 			switchCodeSnippet += "          break;\n\n"
 		}
 		return switchCodeSnippet
 	}, '')
-	switchCode += "        default:\n"
-	switchCode += "          break;\n"			
-	switchCode += "      }\n" 
-	switchCode += "    }\n" 	
+
+	
+	if (switchCodeSnippet.length > 0) {
+		const varName = propName + "_t"
+		switchCode = "    dynamic " + varName + " = map['" + propName + "'];\n" +
+		"    if (" + varName+ " != null) {\n"
+		switchCode += "      if (" + varName + " is Map && " + varName + "['_class'] != null) {\n" 
+		switchCode += "        switch(" + varName + "['_class']) {\n" 
+		switchCode += switchCodeSnippet
+		switchCode += "          default:\n"
+		switchCode += "            model." + propName + " = map['"+propName+"'];\n"
+		switchCode += "            break;\n"	
+		switchCode += "        }\n" 
+		switchCode += "      } else {\n" 
+		switchCode += "        model." + propName + " = map['" + propName + "'];\n" 		
+		switchCode += "      }\n" 		
+		switchCode += "    }\n" 
+	} else {
+		switchCode = "    model." + propName + " = map['"+propName+"'];";
+	}
 
 	return {
 		switchCode, importCode
@@ -222,8 +240,18 @@ function _generateDataClassFunctionCode(schema: any) {
 				case 'integer':
 				case 'boolean':
 				case 'string':
-				case 'object': //dynamic
 					setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'];\n"
+				break
+
+				case 'object':
+					if (prop.hasOwnProperty('properties')) {
+						const subClassName = className + '_' + (propName[0].toUpperCase() + propName.substr(1))
+						setModelWithMapCode += "    if (map['" + propName + "'] != null) {\n"						
+						setModelWithMapCode += '      model.' + propName + " = " + subClassName + ".fromMap(map['"+propName+"']);\n"
+						setModelWithMapCode += "    }\n"						
+					} else {
+						setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'];\n"
+					}
 				break
 
 				case 'number':
@@ -258,7 +286,7 @@ function _generateDataClassFunctionCode(schema: any) {
 									setModelWithMapCode += '\n    model.' + propName + " = List<int>.from(map['"+propName+"']);\n"
 									break
 								case 'number':
-									setModelWithMapCode += '\n    model.' + propName + " = List<double>.from(map['"+propName+"']);\n"
+									setModelWithMapCode += '\n    model.' + propName + " = List<double>.from(map['"+propName+"'].map((d) => d.toDouble()));\n"
 									break
 								case 'string':
 									setModelWithMapCode += '\n    model.' + propName + " = List<String>.from(map['"+propName+"']);\n"
@@ -281,7 +309,12 @@ function _generateDataClassFunctionCode(schema: any) {
 			const classType = prop['classType']
 			const className = prop['className']
 			if (classType == 'Object') {
-				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'] != null ? new " + className + ".fromMap(map['"+propName+"']) : null;\n"
+				setModelWithMapCode += "\n"
+				setModelWithMapCode += "	  if (map['"+propName+"'] is Map) {\n"
+				setModelWithMapCode += "		  model." + propName + " = map['"+propName+"'] != null ? new " + className + ".fromMap(map['"+propName+"']) : null;\n"
+				setModelWithMapCode += "	  } else {\n"
+				setModelWithMapCode += "		  model." + propName + " = " + className + ".fromValue(map['"+propName+"']);\n"	
+				setModelWithMapCode += "	  }\n"
 			} else if (classType == 'double') {
 				setModelWithMapCode += '\n    model.' + propName + " = map['"+propName+"'].toDouble();\n"
 			} else {
@@ -323,6 +356,14 @@ function _generateDataClassFunctionCode(schema: any) {
 	 '    return model;\n' +
 	 '  }\n'
 
+
+	const fromValueFunctionCode = 
+	'    factory ' + className + '.fromValue(dynamic v) {\n' +
+	'	    ' + className + ' model = ' + className + '();\n' +
+	'	    model.noneFilteredValue = v;\n' +
+	'	    return model;\n' +
+	'	  }\n'
+
 	 const toMapFunctionCode = 
 	 '  Map<String, dynamic> toMap() {\n' +
 	 '	  return {\n' +
@@ -342,6 +383,7 @@ function _generateDataClassFunctionCode(schema: any) {
 		dataClassCode: constructorFunctionCode + '\n' + 
 						setModelWithMapFunctionCode + '\n' +
 						fromMapFunctionCode + '\n' + 
+						fromValueFunctionCode + '\n' +
 						toMapFunctionCode + '\n' +
 						toStringFunctionCode
 	}
@@ -434,6 +476,7 @@ function _generateClassCode(schema: any, isSubClass: boolean = false) {
 		dartCode += '  ' + type + ' ' + propName + propValue + ';\n'
 		return dartCode
 	}, '')
+	definePropsCodes += '\n  dynamic noneFilteredValue;\n'
 
 	const dataClassResult = _generateDataClassFunctionCode(schema)
 
@@ -507,14 +550,19 @@ function generateDartCode(schema: any) {
 	}
 
 	return 'class ' + className + ' {\n' +
-		'    dynamic value;\n\n' +
+		'    dynamic noneFilteredValue;\n\n' +
 		'    ' + className + '();\n\n' +		
 		'    factory ' + className + '.fromMap(Map<String, dynamic> map) {\n' +
 		'      if (map == null) return null;\n' +
 		'      ' + className + ' model = ' + className + '();\n' +
-		'      model.value = map;\n' + 	
+		'      model.noneFilteredValue = map;\n' + 	
 		'      return model;\n' + 		
-		'    }\n' + 
+		'    }\n\n' + 
+		'    factory ' + className + '.fromValue(dynamic v) {\n' +
+		'	    ' + className + ' model = ' + className + '();\n' +
+		'	    model.noneFilteredValue = v;\n' +
+		'	    return model;\n' +
+		'	  }\n' +
 		'}\n';
 }
 
@@ -536,25 +584,3 @@ schemas.forEach((schema:any) => {
 	const dartCode = generateDartCode(schema) as string;
 	fs.writeFileSync(dartPath, dartCode)	
 })
-
-
-/*
-const
-$ref
-type
-minimum
-items
-allOf
-description
-maximum
-additionalProperties
-propertyNames
-patternProperties
-enum
-properties
-exclusiveMinimum
-enumDescriptions
-oneOf
-optional
-minItems
-*/

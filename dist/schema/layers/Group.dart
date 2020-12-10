@@ -3,6 +3,8 @@ import './AbstractGroup.dart';
 class Group extends AbstractGroup {
   final String _class = "group";
 
+  dynamic noneFilteredValue;
+
   Group();
 
   static setModelWithMap(Map<String, dynamic> map, Group model) {
@@ -16,6 +18,12 @@ class Group extends AbstractGroup {
 	  Group.setModelWithMap(map, model);
     return model;
   }
+
+    factory Group.fromValue(dynamic v) {
+	    Group model = Group();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

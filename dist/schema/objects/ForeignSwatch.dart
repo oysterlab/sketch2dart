@@ -9,6 +9,8 @@ class ForeignSwatch {
   String remoteSwatchID;
   Swatch localSwatch;
 
+  dynamic noneFilteredValue;
+
   ForeignSwatch();
 
   static setModelWithMap(Map<String, dynamic> map, ForeignSwatch model) {
@@ -22,7 +24,11 @@ class ForeignSwatch {
 
     model.remoteSwatchID = map['remoteSwatchID'];
 
-    model.localSwatch = map['localSwatch'] != null ? new Swatch.fromMap(map['localSwatch']) : null;
+	  if (map['localSwatch'] is Map) {
+		  model.localSwatch = map['localSwatch'] != null ? new Swatch.fromMap(map['localSwatch']) : null;
+	  } else {
+		  model.localSwatch = Swatch.fromValue(map['localSwatch']);
+	  }
 
 	}
 
@@ -32,6 +38,12 @@ class ForeignSwatch {
 	  ForeignSwatch.setModelWithMap(map, model);
     return model;
   }
+
+    factory ForeignSwatch.fromValue(dynamic v) {
+	    ForeignSwatch model = ForeignSwatch();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

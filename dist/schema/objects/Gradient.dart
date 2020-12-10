@@ -8,6 +8,8 @@ class Gradient {
   String to;
   List stops;
 
+  dynamic noneFilteredValue;
+
   Gradient();
 
   static setModelWithMap(Map<String, dynamic> map, Gradient model) {
@@ -31,6 +33,12 @@ class Gradient {
 	  Gradient.setModelWithMap(map, model);
     return model;
   }
+
+    factory Gradient.fromValue(dynamic v) {
+	    Gradient model = Gradient();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

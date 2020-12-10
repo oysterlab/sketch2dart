@@ -5,6 +5,8 @@ class SimpleGrid {
   int gridSize;
   int thickGridTimes;
 
+  dynamic noneFilteredValue;
+
   SimpleGrid();
 
   static setModelWithMap(Map<String, dynamic> map, SimpleGrid model) {
@@ -22,6 +24,12 @@ class SimpleGrid {
 	  SimpleGrid.setModelWithMap(map, model);
     return model;
   }
+
+    factory SimpleGrid.fromValue(dynamic v) {
+	    SimpleGrid model = SimpleGrid();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

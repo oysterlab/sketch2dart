@@ -6,12 +6,14 @@ class BorderOptions {
   int lineCapStyle;
   int lineJoinStyle;
 
+  dynamic noneFilteredValue;
+
   BorderOptions();
 
   static setModelWithMap(Map<String, dynamic> map, BorderOptions model) {
     model.isEnabled = map['isEnabled'];
 
-    model.dashPattern = List<double>.from(map['dashPattern']);
+    model.dashPattern = List<double>.from(map['dashPattern'].map((d) => d.toDouble()));
 
     model.lineCapStyle = map['lineCapStyle'];
 
@@ -25,6 +27,12 @@ class BorderOptions {
 	  BorderOptions.setModelWithMap(map, model);
     return model;
   }
+
+    factory BorderOptions.fromValue(dynamic v) {
+	    BorderOptions model = BorderOptions();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

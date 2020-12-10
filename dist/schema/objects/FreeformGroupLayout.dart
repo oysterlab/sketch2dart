@@ -2,6 +2,8 @@
 class FreeformGroupLayout {
   final String _class = "MSImmutableFreeformGroupLayout";
 
+  dynamic noneFilteredValue;
+
   FreeformGroupLayout();
 
   static setModelWithMap(Map<String, dynamic> map, FreeformGroupLayout model) {
@@ -13,6 +15,12 @@ class FreeformGroupLayout {
 	  FreeformGroupLayout.setModelWithMap(map, model);
     return model;
   }
+
+    factory FreeformGroupLayout.fromValue(dynamic v) {
+	    FreeformGroupLayout model = FreeformGroupLayout();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

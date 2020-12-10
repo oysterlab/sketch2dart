@@ -27,12 +27,18 @@ class AbstractDocument {
   List fontReferences;
   DocumentState documentState;
 
+  dynamic noneFilteredValue;
+
   AbstractDocument();
 
   static setModelWithMap(Map<String, dynamic> map, AbstractDocument model) {
     model.do_objectID = map['do_objectID'];
 
-    model.assets = map['assets'] != null ? new AssetCollection.fromMap(map['assets']) : null;
+	  if (map['assets'] is Map) {
+		  model.assets = map['assets'] != null ? new AssetCollection.fromMap(map['assets']) : null;
+	  } else {
+		  model.assets = AssetCollection.fromValue(map['assets']);
+	  }
 
     model.colorSpace = map['colorSpace'];
 
@@ -54,19 +60,39 @@ class AbstractDocument {
        model.foreignSwatches = map['foreignSwatches'].map((d) => new ForeignSwatch.fromMap(d)).toList();
     }
 
-    model.layerStyles = map['layerStyles'] != null ? new SharedStyleContainer.fromMap(map['layerStyles']) : null;
+	  if (map['layerStyles'] is Map) {
+		  model.layerStyles = map['layerStyles'] != null ? new SharedStyleContainer.fromMap(map['layerStyles']) : null;
+	  } else {
+		  model.layerStyles = SharedStyleContainer.fromValue(map['layerStyles']);
+	  }
 
-    model.layerTextStyles = map['layerTextStyles'] != null ? new SharedTextStyleContainer.fromMap(map['layerTextStyles']) : null;
+	  if (map['layerTextStyles'] is Map) {
+		  model.layerTextStyles = map['layerTextStyles'] != null ? new SharedTextStyleContainer.fromMap(map['layerTextStyles']) : null;
+	  } else {
+		  model.layerTextStyles = SharedTextStyleContainer.fromValue(map['layerTextStyles']);
+	  }
 
-    model.layerSymbols = map['layerSymbols'] != null ? new SymbolContainer.fromMap(map['layerSymbols']) : null;
+	  if (map['layerSymbols'] is Map) {
+		  model.layerSymbols = map['layerSymbols'] != null ? new SymbolContainer.fromMap(map['layerSymbols']) : null;
+	  } else {
+		  model.layerSymbols = SymbolContainer.fromValue(map['layerSymbols']);
+	  }
 
-    model.sharedSwatches = map['sharedSwatches'] != null ? new SwatchContainer.fromMap(map['sharedSwatches']) : null;
+	  if (map['sharedSwatches'] is Map) {
+		  model.sharedSwatches = map['sharedSwatches'] != null ? new SwatchContainer.fromMap(map['sharedSwatches']) : null;
+	  } else {
+		  model.sharedSwatches = SwatchContainer.fromValue(map['sharedSwatches']);
+	  }
 
     if (map['fontReferences'] != null) {
        model.fontReferences = map['fontReferences'].map((d) => new FontRef.fromMap(d)).toList();
     }
 
-    model.documentState = map['documentState'] != null ? new DocumentState.fromMap(map['documentState']) : null;
+	  if (map['documentState'] is Map) {
+		  model.documentState = map['documentState'] != null ? new DocumentState.fromMap(map['documentState']) : null;
+	  } else {
+		  model.documentState = DocumentState.fromValue(map['documentState']);
+	  }
 
 	}
 
@@ -76,6 +102,12 @@ class AbstractDocument {
 	  AbstractDocument.setModelWithMap(map, model);
     return model;
   }
+
+    factory AbstractDocument.fromValue(dynamic v) {
+	    AbstractDocument model = AbstractDocument();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

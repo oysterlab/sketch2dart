@@ -1,6 +1,8 @@
 
 class Workspace {
 
+  dynamic noneFilteredValue;
+
   Workspace();
 
   static setModelWithMap(Map<String, dynamic> map, Workspace model) {
@@ -12,6 +14,12 @@ class Workspace {
 	  Workspace.setModelWithMap(map, model);
     return model;
   }
+
+    factory Workspace.fromValue(dynamic v) {
+	    Workspace model = Workspace();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

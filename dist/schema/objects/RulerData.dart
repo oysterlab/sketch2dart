@@ -4,6 +4,8 @@ class RulerData {
   int base;
   List guides;
 
+  dynamic noneFilteredValue;
+
   RulerData();
 
   static setModelWithMap(Map<String, dynamic> map, RulerData model) {
@@ -19,6 +21,12 @@ class RulerData {
 	  RulerData.setModelWithMap(map, model);
     return model;
   }
+
+    factory RulerData.fromValue(dynamic v) {
+	    RulerData model = RulerData();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -14,6 +14,8 @@ class LayoutGrid {
   bool drawHorizontalLines;
   bool drawVertical;
 
+  dynamic noneFilteredValue;
+
   LayoutGrid();
 
   static setModelWithMap(Map<String, dynamic> map, LayoutGrid model) {
@@ -49,6 +51,12 @@ class LayoutGrid {
 	  LayoutGrid.setModelWithMap(map, model);
     return model;
   }
+
+    factory LayoutGrid.fromValue(dynamic v) {
+	    LayoutGrid model = LayoutGrid();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

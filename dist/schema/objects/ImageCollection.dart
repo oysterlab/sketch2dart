@@ -3,6 +3,8 @@ class ImageCollection {
   final String _class = "imageCollection";
   dynamic images;
 
+  dynamic noneFilteredValue;
+
   ImageCollection();
 
   static setModelWithMap(Map<String, dynamic> map, ImageCollection model) {
@@ -17,6 +19,12 @@ class ImageCollection {
     return model;
   }
 
+    factory ImageCollection.fromValue(dynamic v) {
+	    ImageCollection model = ImageCollection();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
+
   Map<String, dynamic> toMap() {
 	  return {
     };
@@ -30,6 +38,8 @@ class ImageCollection {
 } 
 class ImageCollection_Images {
 
+  dynamic noneFilteredValue;
+
   ImageCollection_Images();
 
   static setModelWithMap(Map<String, dynamic> map, ImageCollection_Images model) {
@@ -41,6 +51,12 @@ class ImageCollection_Images {
 	  ImageCollection_Images.setModelWithMap(map, model);
     return model;
   }
+
+    factory ImageCollection_Images.fromValue(dynamic v) {
+	    ImageCollection_Images model = ImageCollection_Images();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

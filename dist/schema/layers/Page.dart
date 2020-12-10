@@ -12,6 +12,8 @@ class Page extends AbstractGroup {
   LayoutGrid layout;
   SimpleGrid grid;
 
+  dynamic noneFilteredValue;
+
   Page();
 
   static setModelWithMap(Map<String, dynamic> map, Page model) {
@@ -19,13 +21,29 @@ class Page extends AbstractGroup {
 
     model.includeInCloudUpload = map['includeInCloudUpload'];
 
-    model.horizontalRulerData = map['horizontalRulerData'] != null ? new RulerData.fromMap(map['horizontalRulerData']) : null;
+	  if (map['horizontalRulerData'] is Map) {
+		  model.horizontalRulerData = map['horizontalRulerData'] != null ? new RulerData.fromMap(map['horizontalRulerData']) : null;
+	  } else {
+		  model.horizontalRulerData = RulerData.fromValue(map['horizontalRulerData']);
+	  }
 
-    model.verticalRulerData = map['verticalRulerData'] != null ? new RulerData.fromMap(map['verticalRulerData']) : null;
+	  if (map['verticalRulerData'] is Map) {
+		  model.verticalRulerData = map['verticalRulerData'] != null ? new RulerData.fromMap(map['verticalRulerData']) : null;
+	  } else {
+		  model.verticalRulerData = RulerData.fromValue(map['verticalRulerData']);
+	  }
 
-    model.layout = map['layout'] != null ? new LayoutGrid.fromMap(map['layout']) : null;
+	  if (map['layout'] is Map) {
+		  model.layout = map['layout'] != null ? new LayoutGrid.fromMap(map['layout']) : null;
+	  } else {
+		  model.layout = LayoutGrid.fromValue(map['layout']);
+	  }
 
-    model.grid = map['grid'] != null ? new SimpleGrid.fromMap(map['grid']) : null;
+	  if (map['grid'] is Map) {
+		  model.grid = map['grid'] != null ? new SimpleGrid.fromMap(map['grid']) : null;
+	  } else {
+		  model.grid = SimpleGrid.fromValue(map['grid']);
+	  }
 
 	}
 
@@ -35,6 +53,12 @@ class Page extends AbstractGroup {
 	  Page.setModelWithMap(map, model);
     return model;
   }
+
+    factory Page.fromValue(dynamic v) {
+	    Page model = Page();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -8,14 +8,17 @@ class StringAttribute {
   int length;
   StringAttribute_Attributes attributes;
 
+  dynamic noneFilteredValue;
+
   StringAttribute();
 
   static setModelWithMap(Map<String, dynamic> map, StringAttribute model) {
     model.location = map['location'];
 
     model.length = map['length'];
-
-    model.attributes = map['attributes'];
+    if (map['attributes'] != null) {
+      model.attributes = StringAttribute_Attributes.fromMap(map['attributes']);
+    }
 
 	}
 
@@ -25,6 +28,12 @@ class StringAttribute {
 	  StringAttribute.setModelWithMap(map, model);
     return model;
   }
+
+    factory StringAttribute.fromValue(dynamic v) {
+	    StringAttribute model = StringAttribute();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {
@@ -44,6 +53,8 @@ class StringAttribute_Attributes {
   Color MSAttributedStringColorAttribute;
   ParagraphStyle paragraphStyle;
 
+  dynamic noneFilteredValue;
+
   StringAttribute_Attributes();
 
   static setModelWithMap(Map<String, dynamic> map, StringAttribute_Attributes model) {
@@ -51,11 +62,23 @@ class StringAttribute_Attributes {
 
     model.textStyleVerticalAlignmentKey = map['textStyleVerticalAlignmentKey'];
 
-    model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'] != null ? new FontDescriptor.fromMap(map['MSAttributedStringFontAttribute']) : null;
+	  if (map['MSAttributedStringFontAttribute'] is Map) {
+		  model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'] != null ? new FontDescriptor.fromMap(map['MSAttributedStringFontAttribute']) : null;
+	  } else {
+		  model.MSAttributedStringFontAttribute = FontDescriptor.fromValue(map['MSAttributedStringFontAttribute']);
+	  }
 
-    model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'] != null ? new Color.fromMap(map['MSAttributedStringColorAttribute']) : null;
+	  if (map['MSAttributedStringColorAttribute'] is Map) {
+		  model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'] != null ? new Color.fromMap(map['MSAttributedStringColorAttribute']) : null;
+	  } else {
+		  model.MSAttributedStringColorAttribute = Color.fromValue(map['MSAttributedStringColorAttribute']);
+	  }
 
-    model.paragraphStyle = map['paragraphStyle'] != null ? new ParagraphStyle.fromMap(map['paragraphStyle']) : null;
+	  if (map['paragraphStyle'] is Map) {
+		  model.paragraphStyle = map['paragraphStyle'] != null ? new ParagraphStyle.fromMap(map['paragraphStyle']) : null;
+	  } else {
+		  model.paragraphStyle = ParagraphStyle.fromValue(map['paragraphStyle']);
+	  }
 
 	}
 
@@ -65,6 +88,12 @@ class StringAttribute_Attributes {
 	  StringAttribute_Attributes.setModelWithMap(map, model);
     return model;
   }
+
+    factory StringAttribute_Attributes.fromValue(dynamic v) {
+	    StringAttribute_Attributes model = StringAttribute_Attributes();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

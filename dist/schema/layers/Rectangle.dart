@@ -6,6 +6,8 @@ class Rectangle extends AbstractShapeLayer {
   bool hasConvertedToNewRoundCorners;
   bool needsConvertionToNewRoundCorners;
 
+  dynamic noneFilteredValue;
+
   Rectangle();
 
   static setModelWithMap(Map<String, dynamic> map, Rectangle model) {
@@ -25,6 +27,12 @@ class Rectangle extends AbstractShapeLayer {
 	  Rectangle.setModelWithMap(map, model);
     return model;
   }
+
+    factory Rectangle.fromValue(dynamic v) {
+	    Rectangle model = Rectangle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

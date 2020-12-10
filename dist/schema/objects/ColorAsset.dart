@@ -6,6 +6,8 @@ class ColorAsset {
   String name;
   Color color;
 
+  dynamic noneFilteredValue;
+
   ColorAsset();
 
   static setModelWithMap(Map<String, dynamic> map, ColorAsset model) {
@@ -13,7 +15,11 @@ class ColorAsset {
 
     model.name = map['name'];
 
-    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
+	  if (map['color'] is Map) {
+		  model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
+	  } else {
+		  model.color = Color.fromValue(map['color']);
+	  }
 
 	}
 
@@ -23,6 +29,12 @@ class ColorAsset {
 	  ColorAsset.setModelWithMap(map, model);
     return model;
   }
+
+    factory ColorAsset.fromValue(dynamic v) {
+	    ColorAsset model = ColorAsset();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

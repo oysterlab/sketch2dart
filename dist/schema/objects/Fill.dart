@@ -17,12 +17,18 @@ class Fill {
   Gradient gradient;
   dynamic image;
 
+  dynamic noneFilteredValue;
+
   Fill();
 
   static setModelWithMap(Map<String, dynamic> map, Fill model) {
     model.isEnabled = map['isEnabled'];
 
-    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
+	  if (map['color'] is Map) {
+		  model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
+	  } else {
+		  model.color = Color.fromValue(map['color']);
+	  }
 
     model.fillType = map['fillType'];
 
@@ -34,23 +40,44 @@ class Fill {
 
     model.patternTileScale = map['patternTileScale'] != null ? map['patternTileScale'].toDouble() : 0.0;
 
-    model.contextSettings = map['contextSettings'] != null ? new GraphicsContextSettings.fromMap(map['contextSettings']) : null;
+	  if (map['contextSettings'] is Map) {
+		  model.contextSettings = map['contextSettings'] != null ? new GraphicsContextSettings.fromMap(map['contextSettings']) : null;
+	  } else {
+		  model.contextSettings = GraphicsContextSettings.fromValue(map['contextSettings']);
+	  }
 
-    model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
+	  if (map['gradient'] is Map) {
+		  model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
+	  } else {
+		  model.gradient = Gradient.fromValue(map['gradient']);
+	  }
 
     dynamic image_t = map['image'];
     if (image_t != null) {
-      switch(image_t['_class']) {
+      if (image_t is Map && image_t['_class'] != null) {
+        switch(image_t['_class']) {
         case 'MSJSONFileReference':
-          model.image = map['image'] != null ? new FileRef.fromMap(map['image']) : null;
+			    if (map['image'] is Map) {
+			      model.image = map['image'] != null ? new FileRef.fromMap(map['image']) : null;
+			    } else {
+			      model.image = FileRef.fromValue(map['image']);
+			    }
           break;
 
         case 'MSJSONOriginalDataReference':
-          model.image = map['image'] != null ? new DataRef.fromMap(map['image']) : null;
+			    if (map['image'] is Map) {
+			      model.image = map['image'] != null ? new DataRef.fromMap(map['image']) : null;
+			    } else {
+			      model.image = DataRef.fromValue(map['image']);
+			    }
           break;
 
-        default:
-          break;
+          default:
+            model.image = map['image'];
+            break;
+        }
+      } else {
+        model.image = map['image'];
       }
     }
 
@@ -62,6 +89,12 @@ class Fill {
 	  Fill.setModelWithMap(map, model);
     return model;
   }
+
+    factory Fill.fromValue(dynamic v) {
+	    Fill model = Fill();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

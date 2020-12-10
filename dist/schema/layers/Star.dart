@@ -5,6 +5,8 @@ class Star extends AbstractShapeLayer {
   int numberOfPoints;
   double radius;
 
+  dynamic noneFilteredValue;
+
   Star();
 
   static setModelWithMap(Map<String, dynamic> map, Star model) {
@@ -22,6 +24,12 @@ class Star extends AbstractShapeLayer {
 	  Star.setModelWithMap(map, model);
     return model;
   }
+
+    factory Star.fromValue(dynamic v) {
+	    Star model = Star();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

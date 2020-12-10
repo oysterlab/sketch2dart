@@ -13,6 +13,8 @@ class Meta {
   String appVersion;
   int build;
 
+  dynamic noneFilteredValue;
+
   Meta();
 
   static setModelWithMap(Map<String, dynamic> map, Meta model) {
@@ -29,8 +31,9 @@ class Meta {
     model.autosaved = map['autosaved'];
 
     model.variant = map['variant'];
-
-    model.created = map['created'];
+    if (map['created'] != null) {
+      model.created = Meta_Created.fromMap(map['created']);
+    }
 
     model.saveHistory = List<String>.from(map['saveHistory']);
 
@@ -47,6 +50,12 @@ class Meta {
     return model;
   }
 
+    factory Meta.fromValue(dynamic v) {
+	    Meta model = Meta();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
+
   Map<String, dynamic> toMap() {
 	  return {
     };
@@ -60,6 +69,8 @@ class Meta {
 } 
 class Meta_PagesAndArtboards {
 
+  dynamic noneFilteredValue;
+
   Meta_PagesAndArtboards();
 
   static setModelWithMap(Map<String, dynamic> map, Meta_PagesAndArtboards model) {
@@ -71,6 +82,12 @@ class Meta_PagesAndArtboards {
 	  Meta_PagesAndArtboards.setModelWithMap(map, model);
     return model;
   }
+
+    factory Meta_PagesAndArtboards.fromValue(dynamic v) {
+	    Meta_PagesAndArtboards model = Meta_PagesAndArtboards();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {
@@ -91,6 +108,8 @@ class Meta_Created {
   double compatibilityVersion;
   double version;
   String variant;
+
+  dynamic noneFilteredValue;
 
   Meta_Created();
 
@@ -117,6 +136,12 @@ class Meta_Created {
 	  Meta_Created.setModelWithMap(map, model);
     return model;
   }
+
+    factory Meta_Created.fromValue(dynamic v) {
+	    Meta_Created model = Meta_Created();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

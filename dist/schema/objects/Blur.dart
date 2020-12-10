@@ -8,6 +8,8 @@ class Blur {
   double saturation;
   int type;
 
+  dynamic noneFilteredValue;
+
   Blur();
 
   static setModelWithMap(Map<String, dynamic> map, Blur model) {
@@ -31,6 +33,12 @@ class Blur {
 	  Blur.setModelWithMap(map, model);
     return model;
   }
+
+    factory Blur.fromValue(dynamic v) {
+	    Blur model = Blur();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -9,6 +9,8 @@ class ForeignTextStyle {
   SharedStyle localSharedStyle;
   bool missingLibraryFontAcknowledged;
 
+  dynamic noneFilteredValue;
+
   ForeignTextStyle();
 
   static setModelWithMap(Map<String, dynamic> map, ForeignTextStyle model) {
@@ -20,7 +22,11 @@ class ForeignTextStyle {
 
     model.remoteStyleID = map['remoteStyleID'];
 
-    model.localSharedStyle = map['localSharedStyle'] != null ? new SharedStyle.fromMap(map['localSharedStyle']) : null;
+	  if (map['localSharedStyle'] is Map) {
+		  model.localSharedStyle = map['localSharedStyle'] != null ? new SharedStyle.fromMap(map['localSharedStyle']) : null;
+	  } else {
+		  model.localSharedStyle = SharedStyle.fromValue(map['localSharedStyle']);
+	  }
 
     model.missingLibraryFontAcknowledged = map['missingLibraryFontAcknowledged'];
 
@@ -32,6 +38,12 @@ class ForeignTextStyle {
 	  ForeignTextStyle.setModelWithMap(map, model);
     return model;
   }
+
+    factory ForeignTextStyle.fromValue(dynamic v) {
+	    ForeignTextStyle model = ForeignTextStyle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

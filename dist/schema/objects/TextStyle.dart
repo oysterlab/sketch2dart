@@ -7,12 +7,15 @@ class TextStyle {
   int verticalAlignment;
   TextStyle_EncodedAttributes encodedAttributes;
 
+  dynamic noneFilteredValue;
+
   TextStyle();
 
   static setModelWithMap(Map<String, dynamic> map, TextStyle model) {
     model.verticalAlignment = map['verticalAlignment'];
-
-    model.encodedAttributes = map['encodedAttributes'];
+    if (map['encodedAttributes'] != null) {
+      model.encodedAttributes = TextStyle_EncodedAttributes.fromMap(map['encodedAttributes']);
+    }
 
 	}
 
@@ -22,6 +25,12 @@ class TextStyle {
 	  TextStyle.setModelWithMap(map, model);
     return model;
   }
+
+    factory TextStyle.fromValue(dynamic v) {
+	    TextStyle model = TextStyle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {
@@ -44,10 +53,16 @@ class TextStyle_EncodedAttributes {
   int textStyleVerticalAlignmentKey;
   Color MSAttributedStringColorAttribute;
 
+  dynamic noneFilteredValue;
+
   TextStyle_EncodedAttributes();
 
   static setModelWithMap(Map<String, dynamic> map, TextStyle_EncodedAttributes model) {
-    model.paragraphStyle = map['paragraphStyle'] != null ? new ParagraphStyle.fromMap(map['paragraphStyle']) : null;
+	  if (map['paragraphStyle'] is Map) {
+		  model.paragraphStyle = map['paragraphStyle'] != null ? new ParagraphStyle.fromMap(map['paragraphStyle']) : null;
+	  } else {
+		  model.paragraphStyle = ParagraphStyle.fromValue(map['paragraphStyle']);
+	  }
 
     model.MSAttributedStringTextTransformAttribute = map['MSAttributedStringTextTransformAttribute'];
 
@@ -55,11 +70,19 @@ class TextStyle_EncodedAttributes {
 
     model.kerning = map['kerning'] != null ? map['kerning'].toDouble() : 0.0;
 
-    model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'] != null ? new FontDescriptor.fromMap(map['MSAttributedStringFontAttribute']) : null;
+	  if (map['MSAttributedStringFontAttribute'] is Map) {
+		  model.MSAttributedStringFontAttribute = map['MSAttributedStringFontAttribute'] != null ? new FontDescriptor.fromMap(map['MSAttributedStringFontAttribute']) : null;
+	  } else {
+		  model.MSAttributedStringFontAttribute = FontDescriptor.fromValue(map['MSAttributedStringFontAttribute']);
+	  }
 
     model.textStyleVerticalAlignmentKey = map['textStyleVerticalAlignmentKey'];
 
-    model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'] != null ? new Color.fromMap(map['MSAttributedStringColorAttribute']) : null;
+	  if (map['MSAttributedStringColorAttribute'] is Map) {
+		  model.MSAttributedStringColorAttribute = map['MSAttributedStringColorAttribute'] != null ? new Color.fromMap(map['MSAttributedStringColorAttribute']) : null;
+	  } else {
+		  model.MSAttributedStringColorAttribute = Color.fromValue(map['MSAttributedStringColorAttribute']);
+	  }
 
 	}
 
@@ -69,6 +92,12 @@ class TextStyle_EncodedAttributes {
 	  TextStyle_EncodedAttributes.setModelWithMap(map, model);
     return model;
   }
+
+    factory TextStyle_EncodedAttributes.fromValue(dynamic v) {
+	    TextStyle_EncodedAttributes model = TextStyle_EncodedAttributes();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

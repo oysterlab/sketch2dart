@@ -8,6 +8,8 @@ class ExportOptions {
   int layerOptions;
   bool shouldTrim;
 
+  dynamic noneFilteredValue;
+
   ExportOptions();
 
   static setModelWithMap(Map<String, dynamic> map, ExportOptions model) {
@@ -31,6 +33,12 @@ class ExportOptions {
 	  ExportOptions.setModelWithMap(map, model);
     return model;
   }
+
+    factory ExportOptions.fromValue(dynamic v) {
+	    ExportOptions model = ExportOptions();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

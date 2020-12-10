@@ -7,6 +7,8 @@ class Rect {
   double x;
   double y;
 
+  dynamic noneFilteredValue;
+
   Rect();
 
   static setModelWithMap(Map<String, dynamic> map, Rect model) {
@@ -28,6 +30,12 @@ class Rect {
 	  Rect.setModelWithMap(map, model);
     return model;
   }
+
+    factory Rect.fromValue(dynamic v) {
+	    Rect model = Rect();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

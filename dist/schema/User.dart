@@ -2,10 +2,13 @@
 class User {
   User_Document document;
 
+  dynamic noneFilteredValue;
+
   User();
 
-  static setModelWithMap(Map<String, dynamic> map, User model) {
-    model.document = map['document'];
+  static setModelWithMap(Map<String, dynamic> map, User model) {    if (map['document'] != null) {
+      model.document = User_Document.fromMap(map['document']);
+    }
 
 	}
 
@@ -15,6 +18,12 @@ class User {
 	  User.setModelWithMap(map, model);
     return model;
   }
+
+    factory User.fromValue(dynamic v) {
+	    User model = User();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {
@@ -33,6 +42,8 @@ class User_Document {
   List expandedSymbolPathsInSidebar;
   List expandedTextStylePathsInPopover;
   int libraryListCollapsed;
+
+  dynamic noneFilteredValue;
 
   User_Document();
 
@@ -55,6 +66,12 @@ class User_Document {
 	  User_Document.setModelWithMap(map, model);
     return model;
   }
+
+    factory User_Document.fromValue(dynamic v) {
+	    User_Document model = User_Document();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -5,6 +5,8 @@ class SwatchContainer {
   String do_objectID;
   List objects;
 
+  dynamic noneFilteredValue;
+
   SwatchContainer();
 
   static setModelWithMap(Map<String, dynamic> map, SwatchContainer model) {
@@ -22,6 +24,12 @@ class SwatchContainer {
 	  SwatchContainer.setModelWithMap(map, model);
     return model;
   }
+
+    factory SwatchContainer.fromValue(dynamic v) {
+	    SwatchContainer model = SwatchContainer();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -3,6 +3,8 @@ import './AbstractLayer.dart';
 class Hotspot extends AbstractLayer {
   final String _class = "MSImmutableHotspotLayer";
 
+  dynamic noneFilteredValue;
+
   Hotspot();
 
   static setModelWithMap(Map<String, dynamic> map, Hotspot model) {
@@ -16,6 +18,12 @@ class Hotspot extends AbstractLayer {
 	  Hotspot.setModelWithMap(map, model);
     return model;
   }
+
+    factory Hotspot.fromValue(dynamic v) {
+	    Hotspot model = Hotspot();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

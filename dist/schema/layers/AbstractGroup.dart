@@ -22,6 +22,8 @@ class AbstractGroup extends AbstractLayer {
   dynamic groupLayout;
   List layers;
 
+  dynamic noneFilteredValue;
+
   AbstractGroup();
 
   static setModelWithMap(Map<String, dynamic> map, AbstractGroup model) {
@@ -31,17 +33,30 @@ class AbstractGroup extends AbstractLayer {
 
     dynamic groupLayout_t = map['groupLayout'];
     if (groupLayout_t != null) {
-      switch(groupLayout_t['_class']) {
+      if (groupLayout_t is Map && groupLayout_t['_class'] != null) {
+        switch(groupLayout_t['_class']) {
         case 'MSImmutableFreeformGroupLayout':
-          model.groupLayout = map['groupLayout'] != null ? new FreeformGroupLayout.fromMap(map['groupLayout']) : null;
+			    if (map['groupLayout'] is Map) {
+			      model.groupLayout = map['groupLayout'] != null ? new FreeformGroupLayout.fromMap(map['groupLayout']) : null;
+			    } else {
+			      model.groupLayout = FreeformGroupLayout.fromValue(map['groupLayout']);
+			    }
           break;
 
         case 'MSImmutableInferredGroupLayout':
-          model.groupLayout = map['groupLayout'] != null ? new InferredGroupLayout.fromMap(map['groupLayout']) : null;
+			    if (map['groupLayout'] is Map) {
+			      model.groupLayout = map['groupLayout'] != null ? new InferredGroupLayout.fromMap(map['groupLayout']) : null;
+			    } else {
+			      model.groupLayout = InferredGroupLayout.fromValue(map['groupLayout']);
+			    }
           break;
 
-        default:
-          break;
+          default:
+            model.groupLayout = map['groupLayout'];
+            break;
+        }
+      } else {
+        model.groupLayout = map['groupLayout'];
       }
     }
     if (map['layers'] != null) {
@@ -124,6 +139,12 @@ class AbstractGroup extends AbstractLayer {
 	  AbstractGroup.setModelWithMap(map, model);
     return model;
   }
+
+    factory AbstractGroup.fromValue(dynamic v) {
+	    AbstractGroup model = AbstractGroup();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

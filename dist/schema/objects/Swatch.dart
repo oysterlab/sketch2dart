@@ -6,6 +6,8 @@ class Swatch {
   String name;
   Color value;
 
+  dynamic noneFilteredValue;
+
   Swatch();
 
   static setModelWithMap(Map<String, dynamic> map, Swatch model) {
@@ -13,7 +15,11 @@ class Swatch {
 
     model.name = map['name'];
 
-    model.value = map['value'] != null ? new Color.fromMap(map['value']) : null;
+	  if (map['value'] is Map) {
+		  model.value = map['value'] != null ? new Color.fromMap(map['value']) : null;
+	  } else {
+		  model.value = Color.fromValue(map['value']);
+	  }
 
 	}
 
@@ -23,6 +29,12 @@ class Swatch {
 	  Swatch.setModelWithMap(map, model);
     return model;
   }
+
+    factory Swatch.fromValue(dynamic v) {
+	    Swatch model = Swatch();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

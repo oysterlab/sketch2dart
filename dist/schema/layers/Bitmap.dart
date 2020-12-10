@@ -9,6 +9,8 @@ class Bitmap extends AbstractLayer {
   int intendedDPI;
   String clippingMask;
 
+  dynamic noneFilteredValue;
+
   Bitmap();
 
   static setModelWithMap(Map<String, dynamic> map, Bitmap model) {
@@ -18,17 +20,30 @@ class Bitmap extends AbstractLayer {
 
     dynamic image_t = map['image'];
     if (image_t != null) {
-      switch(image_t['_class']) {
+      if (image_t is Map && image_t['_class'] != null) {
+        switch(image_t['_class']) {
         case 'MSJSONFileReference':
-          model.image = map['image'] != null ? new FileRef.fromMap(map['image']) : null;
+			    if (map['image'] is Map) {
+			      model.image = map['image'] != null ? new FileRef.fromMap(map['image']) : null;
+			    } else {
+			      model.image = FileRef.fromValue(map['image']);
+			    }
           break;
 
         case 'MSJSONOriginalDataReference':
-          model.image = map['image'] != null ? new DataRef.fromMap(map['image']) : null;
+			    if (map['image'] is Map) {
+			      model.image = map['image'] != null ? new DataRef.fromMap(map['image']) : null;
+			    } else {
+			      model.image = DataRef.fromValue(map['image']);
+			    }
           break;
 
-        default:
-          break;
+          default:
+            model.image = map['image'];
+            break;
+        }
+      } else {
+        model.image = map['image'];
       }
     }
 
@@ -44,6 +59,12 @@ class Bitmap extends AbstractLayer {
 	  Bitmap.setModelWithMap(map, model);
     return model;
   }
+
+    factory Bitmap.fromValue(dynamic v) {
+	    Bitmap model = Bitmap();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

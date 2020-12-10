@@ -6,6 +6,8 @@ class GradientAsset {
   String name;
   Gradient gradient;
 
+  dynamic noneFilteredValue;
+
   GradientAsset();
 
   static setModelWithMap(Map<String, dynamic> map, GradientAsset model) {
@@ -13,7 +15,11 @@ class GradientAsset {
 
     model.name = map['name'];
 
-    model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
+	  if (map['gradient'] is Map) {
+		  model.gradient = map['gradient'] != null ? new Gradient.fromMap(map['gradient']) : null;
+	  } else {
+		  model.gradient = Gradient.fromValue(map['gradient']);
+	  }
 
 	}
 
@@ -23,6 +29,12 @@ class GradientAsset {
 	  GradientAsset.setModelWithMap(map, model);
     return model;
   }
+
+    factory GradientAsset.fromValue(dynamic v) {
+	    GradientAsset model = GradientAsset();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

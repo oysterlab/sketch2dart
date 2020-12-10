@@ -8,10 +8,16 @@ class FontRef {
   int options;
   List postscriptNames;
 
+  dynamic noneFilteredValue;
+
   FontRef();
 
   static setModelWithMap(Map<String, dynamic> map, FontRef model) {
-    model.fontData = map['fontData'] != null ? new DataRef.fromMap(map['fontData']) : null;
+	  if (map['fontData'] is Map) {
+		  model.fontData = map['fontData'] != null ? new DataRef.fromMap(map['fontData']) : null;
+	  } else {
+		  model.fontData = DataRef.fromValue(map['fontData']);
+	  }
 
     model.fontFamilyName = map['fontFamilyName'];
 
@@ -29,6 +35,12 @@ class FontRef {
 	  FontRef.setModelWithMap(map, model);
     return model;
   }
+
+    factory FontRef.fromValue(dynamic v) {
+	    FontRef model = FontRef();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

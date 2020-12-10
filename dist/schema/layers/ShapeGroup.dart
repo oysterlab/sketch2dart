@@ -4,6 +4,8 @@ class ShapeGroup extends AbstractGroup {
   final String _class = "shapeGroup";
   int windingRule;
 
+  dynamic noneFilteredValue;
+
   ShapeGroup();
 
   static setModelWithMap(Map<String, dynamic> map, ShapeGroup model) {
@@ -19,6 +21,12 @@ class ShapeGroup extends AbstractGroup {
 	  ShapeGroup.setModelWithMap(map, model);
     return model;
   }
+
+    factory ShapeGroup.fromValue(dynamic v) {
+	    ShapeGroup model = ShapeGroup();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

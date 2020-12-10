@@ -4,6 +4,8 @@ class Polygon extends AbstractShapeLayer {
   final String _class = "polygon";
   int numberOfPoints;
 
+  dynamic noneFilteredValue;
+
   Polygon();
 
   static setModelWithMap(Map<String, dynamic> map, Polygon model) {
@@ -19,6 +21,12 @@ class Polygon extends AbstractShapeLayer {
 	  Polygon.setModelWithMap(map, model);
     return model;
   }
+
+    factory Polygon.fromValue(dynamic v) {
+	    Polygon model = Polygon();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

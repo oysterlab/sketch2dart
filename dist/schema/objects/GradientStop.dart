@@ -5,10 +5,16 @@ class GradientStop {
   Color color;
   double position;
 
+  dynamic noneFilteredValue;
+
   GradientStop();
 
   static setModelWithMap(Map<String, dynamic> map, GradientStop model) {
-    model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
+	  if (map['color'] is Map) {
+		  model.color = map['color'] != null ? new Color.fromMap(map['color']) : null;
+	  } else {
+		  model.color = Color.fromValue(map['color']);
+	  }
 
     model.position = map['position'].toDouble();
 
@@ -20,6 +26,12 @@ class GradientStop {
 	  GradientStop.setModelWithMap(map, model);
     return model;
   }
+
+    factory GradientStop.fromValue(dynamic v) {
+	    GradientStop model = GradientStop();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

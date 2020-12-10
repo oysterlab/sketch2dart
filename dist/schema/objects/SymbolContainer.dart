@@ -4,6 +4,8 @@ class SymbolContainer {
   final String _class = "symbolContainer";
   List objects;
 
+  dynamic noneFilteredValue;
+
   SymbolContainer();
 
   static setModelWithMap(Map<String, dynamic> map, SymbolContainer model) {
@@ -19,6 +21,12 @@ class SymbolContainer {
 	  SymbolContainer.setModelWithMap(map, model);
     return model;
   }
+
+    factory SymbolContainer.fromValue(dynamic v) {
+	    SymbolContainer model = SymbolContainer();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

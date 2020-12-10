@@ -6,6 +6,8 @@ class SharedStyle {
   String name;
   Style value;
 
+  dynamic noneFilteredValue;
+
   SharedStyle();
 
   static setModelWithMap(Map<String, dynamic> map, SharedStyle model) {
@@ -13,7 +15,11 @@ class SharedStyle {
 
     model.name = map['name'];
 
-    model.value = map['value'] != null ? new Style.fromMap(map['value']) : null;
+	  if (map['value'] is Map) {
+		  model.value = map['value'] != null ? new Style.fromMap(map['value']) : null;
+	  } else {
+		  model.value = Style.fromValue(map['value']);
+	  }
 
 	}
 
@@ -23,6 +29,12 @@ class SharedStyle {
 	  SharedStyle.setModelWithMap(map, model);
     return model;
   }
+
+    factory SharedStyle.fromValue(dynamic v) {
+	    SharedStyle model = SharedStyle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

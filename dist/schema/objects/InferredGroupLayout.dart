@@ -6,6 +6,8 @@ class InferredGroupLayout {
   double maxSize;
   double minSize;
 
+  dynamic noneFilteredValue;
+
   InferredGroupLayout();
 
   static setModelWithMap(Map<String, dynamic> map, InferredGroupLayout model) {
@@ -25,6 +27,12 @@ class InferredGroupLayout {
 	  InferredGroupLayout.setModelWithMap(map, model);
     return model;
   }
+
+    factory InferredGroupLayout.fromValue(dynamic v) {
+	    InferredGroupLayout model = InferredGroupLayout();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

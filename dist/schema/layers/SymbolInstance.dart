@@ -9,6 +9,8 @@ class SymbolInstance extends AbstractLayer {
   double verticalSpacing;
   double horizontalSpacing;
 
+  dynamic noneFilteredValue;
+
   SymbolInstance();
 
   static setModelWithMap(Map<String, dynamic> map, SymbolInstance model) {
@@ -34,6 +36,12 @@ class SymbolInstance extends AbstractLayer {
 	  SymbolInstance.setModelWithMap(map, model);
     return model;
   }
+
+    factory SymbolInstance.fromValue(dynamic v) {
+	    SymbolInstance model = SymbolInstance();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

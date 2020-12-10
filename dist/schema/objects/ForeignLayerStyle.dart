@@ -9,6 +9,8 @@ class ForeignLayerStyle {
   String remoteStyleID;
   SharedStyle localSharedStyle;
 
+  dynamic noneFilteredValue;
+
   ForeignLayerStyle();
 
   static setModelWithMap(Map<String, dynamic> map, ForeignLayerStyle model) {
@@ -22,7 +24,11 @@ class ForeignLayerStyle {
 
     model.remoteStyleID = map['remoteStyleID'];
 
-    model.localSharedStyle = map['localSharedStyle'] != null ? new SharedStyle.fromMap(map['localSharedStyle']) : null;
+	  if (map['localSharedStyle'] is Map) {
+		  model.localSharedStyle = map['localSharedStyle'] != null ? new SharedStyle.fromMap(map['localSharedStyle']) : null;
+	  } else {
+		  model.localSharedStyle = SharedStyle.fromValue(map['localSharedStyle']);
+	  }
 
 	}
 
@@ -32,6 +38,12 @@ class ForeignLayerStyle {
 	  ForeignLayerStyle.setModelWithMap(map, model);
     return model;
   }
+
+    factory ForeignLayerStyle.fromValue(dynamic v) {
+	    ForeignLayerStyle model = ForeignLayerStyle();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

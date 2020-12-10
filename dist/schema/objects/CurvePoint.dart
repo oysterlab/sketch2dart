@@ -9,6 +9,8 @@ class CurvePoint {
   int curveMode;
   String point;
 
+  dynamic noneFilteredValue;
+
   CurvePoint();
 
   static setModelWithMap(Map<String, dynamic> map, CurvePoint model) {
@@ -34,6 +36,12 @@ class CurvePoint {
 	  CurvePoint.setModelWithMap(map, model);
     return model;
   }
+
+    factory CurvePoint.fromValue(dynamic v) {
+	    CurvePoint model = CurvePoint();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

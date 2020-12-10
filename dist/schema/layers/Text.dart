@@ -10,12 +10,18 @@ class Text extends AbstractLayer {
   int textBehaviour;
   String glyphBounds;
 
+  dynamic noneFilteredValue;
+
   Text();
 
   static setModelWithMap(Map<String, dynamic> map, Text model) {
     AbstractLayer.setModelWithMap(map, model);
 
-    model.attributedString = map['attributedString'] != null ? new AttributedString.fromMap(map['attributedString']) : null;
+	  if (map['attributedString'] is Map) {
+		  model.attributedString = map['attributedString'] != null ? new AttributedString.fromMap(map['attributedString']) : null;
+	  } else {
+		  model.attributedString = AttributedString.fromValue(map['attributedString']);
+	  }
 
     model.automaticallyDrawOnUnderlyingPath = map['automaticallyDrawOnUnderlyingPath'];
 
@@ -35,6 +41,12 @@ class Text extends AbstractLayer {
 	  Text.setModelWithMap(map, model);
     return model;
   }
+
+    factory Text.fromValue(dynamic v) {
+	    Text model = Text();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

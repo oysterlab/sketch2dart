@@ -8,6 +8,8 @@ class ExportFormat {
   double scale;
   int visibleScaleType;
 
+  dynamic noneFilteredValue;
+
   ExportFormat();
 
   static setModelWithMap(Map<String, dynamic> map, ExportFormat model) {
@@ -31,6 +33,12 @@ class ExportFormat {
 	  ExportFormat.setModelWithMap(map, model);
     return model;
   }
+
+    factory ExportFormat.fromValue(dynamic v) {
+	    ExportFormat model = ExportFormat();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -1,6 +1,8 @@
 
 class DocumentState {
 
+  dynamic noneFilteredValue;
+
   DocumentState();
 
   static setModelWithMap(Map<String, dynamic> map, DocumentState model) {
@@ -12,6 +14,12 @@ class DocumentState {
 	  DocumentState.setModelWithMap(map, model);
     return model;
   }
+
+    factory DocumentState.fromValue(dynamic v) {
+	    DocumentState model = DocumentState();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

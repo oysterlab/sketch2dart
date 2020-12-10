@@ -6,17 +6,12 @@ class FlowConnection {
   int animationType;
   bool maintainScrollPosition;
 
+  dynamic noneFilteredValue;
+
   FlowConnection();
 
   static setModelWithMap(Map<String, dynamic> map, FlowConnection model) {
-    dynamic destinationArtboardID_t = map['destinationArtboardID'];
-    if (destinationArtboardID_t != null) {
-      switch(destinationArtboardID_t['_class']) {
-        default:
-          break;
-      }
-    }
-
+    model.destinationArtboardID = map['destinationArtboardID'];
     model.animationType = map['animationType'];
 
     model.maintainScrollPosition = map['maintainScrollPosition'];
@@ -29,6 +24,12 @@ class FlowConnection {
 	  FlowConnection.setModelWithMap(map, model);
     return model;
   }
+
+    factory FlowConnection.fromValue(dynamic v) {
+	    FlowConnection model = FlowConnection();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -4,6 +4,8 @@ import './objects/FileRef.dart';
 class Document extends AbstractDocument {
   List pages;
 
+  dynamic noneFilteredValue;
+
   Document();
 
   static setModelWithMap(Map<String, dynamic> map, Document model) {
@@ -21,6 +23,12 @@ class Document extends AbstractDocument {
 	  Document.setModelWithMap(map, model);
     return model;
   }
+
+    factory Document.fromValue(dynamic v) {
+	    Document model = Document();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

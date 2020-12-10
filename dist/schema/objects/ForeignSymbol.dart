@@ -11,6 +11,8 @@ class ForeignSymbol {
   SymbolMaster symbolMaster;
   bool missingLibraryFontAcknowledged;
 
+  dynamic noneFilteredValue;
+
   ForeignSymbol();
 
   static setModelWithMap(Map<String, dynamic> map, ForeignSymbol model) {
@@ -22,9 +24,17 @@ class ForeignSymbol {
 
     model.symbolPrivate = map['symbolPrivate'];
 
-    model.originalMaster = map['originalMaster'] != null ? new SymbolMaster.fromMap(map['originalMaster']) : null;
+	  if (map['originalMaster'] is Map) {
+		  model.originalMaster = map['originalMaster'] != null ? new SymbolMaster.fromMap(map['originalMaster']) : null;
+	  } else {
+		  model.originalMaster = SymbolMaster.fromValue(map['originalMaster']);
+	  }
 
-    model.symbolMaster = map['symbolMaster'] != null ? new SymbolMaster.fromMap(map['symbolMaster']) : null;
+	  if (map['symbolMaster'] is Map) {
+		  model.symbolMaster = map['symbolMaster'] != null ? new SymbolMaster.fromMap(map['symbolMaster']) : null;
+	  } else {
+		  model.symbolMaster = SymbolMaster.fromValue(map['symbolMaster']);
+	  }
 
     model.missingLibraryFontAcknowledged = map['missingLibraryFontAcknowledged'];
 
@@ -36,6 +46,12 @@ class ForeignSymbol {
 	  ForeignSymbol.setModelWithMap(map, model);
     return model;
   }
+
+    factory ForeignSymbol.fromValue(dynamic v) {
+	    ForeignSymbol model = ForeignSymbol();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {

@@ -4,6 +4,8 @@ class GraphicsContextSettings {
   int blendMode;
   double opacity;
 
+  dynamic noneFilteredValue;
+
   GraphicsContextSettings();
 
   static setModelWithMap(Map<String, dynamic> map, GraphicsContextSettings model) {
@@ -19,6 +21,12 @@ class GraphicsContextSettings {
 	  GraphicsContextSettings.setModelWithMap(map, model);
     return model;
   }
+
+    factory GraphicsContextSettings.fromValue(dynamic v) {
+	    GraphicsContextSettings model = GraphicsContextSettings();
+	    model.noneFilteredValue = v;
+	    return model;
+	  }
 
   Map<String, dynamic> toMap() {
 	  return {
