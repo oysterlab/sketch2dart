@@ -569,18 +569,40 @@ function generateDartCode(schema: any) {
 
 const SCHEMA_PATH = 'schema'
 const DIST_PATH = 'dist'
-const schemas = getSchemas(SCHEMA_PATH)
-const schema = schemas[0]
+const LIBRARY_NAME = 'SketchModel'
 
-schemas.forEach((schema:any) => {
-	const className = schema['className']
-	const classPath = path.join(DIST_PATH, schema['classPath'])
+function run() {
 
-	if (!fs.existsSync(classPath)) {
-		fs.mkdirSync(classPath)
-	}
+	const modelPaths = getSchemas(SCHEMA_PATH).reduce((modelPaths:Array<string>, schema:any) => {
+		const className = schema['className']
+		const classPath = path.join(DIST_PATH, schema['classPath'])
 
-	const dartPath = path.join(classPath, className + '.dart')
-	const dartCode = generateDartCode(schema) as string;
-	fs.writeFileSync(dartPath, dartCode)	
-})
+		if (!fs.existsSync(classPath)) {
+			fs.mkdirSync(classPath)
+		}
+
+		const dartPath = path.join(classPath, className + '.dart')
+		const dartCode = generateDartCode(schema) as string
+		fs.writeFileSync(dartPath, dartCode)
+		modelPaths.push(dartPath.replace(path.join(DIST_PATH, SCHEMA_PATH) + '/', ''))
+		return modelPaths
+	}, [])
+
+	// generate library file
+	console.log(modelPaths)
+	const exportsCodeSnippet = modelPaths.reduce((exportsCodeSnippet:string, modelPath:string) => {
+		exportsCodeSnippet += "export '" + modelPath +"';\n"
+		return exportsCodeSnippet
+	}, '');
+
+	const exportsCode = 'library '+LIBRARY_NAME+';\n\n'
+		+exportsCodeSnippet
+	
+	const libraryFilePath = path.join(DIST_PATH, SCHEMA_PATH, LIBRARY_NAME + '.dart')
+
+	console.log(libraryFilePath)
+
+	fs.writeFileSync(libraryFilePath, exportsCode)
+}
+
+run()
